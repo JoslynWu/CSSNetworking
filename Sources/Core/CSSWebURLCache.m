@@ -30,7 +30,7 @@ static NSUInteger cacheDiskSize   = 100*1024*1024;
     NSString *urlString = [NSString stringWithFormat:@"%@_%@_%@",[orignalURL.URL absoluteString], sign, urlBodyString];
 #if (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED >= 90000)
     urlString = [urlString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-#elif
+#else
     urlString = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 #endif
     NSMutableURLRequest *storeRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
