@@ -1,0 +1,6 @@
+framework module CSSModel {
+  umbrella header "CSSModel-umbrella.h"
+
+  export *
+  module * { export * }
+}
