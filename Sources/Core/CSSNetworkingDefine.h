@@ -35,7 +35,7 @@ typedef NS_ENUM(NSInteger, CSSResponseSerializerType) {
 
 /** 转模型的方式 */
 typedef NS_ENUM(NSInteger, CSSProcessStyle) {
-    CSSModel,        // 使用CSSModel, default
+    CSSModel,       // https://github.com/JoslynWu/CSSModel, default
     YYModel,        // https://github.com/ibireme/YYModel
     MJExtension,    // https://github.com/CoderMJLee/MJExtension
     Custom,         // 自定义
