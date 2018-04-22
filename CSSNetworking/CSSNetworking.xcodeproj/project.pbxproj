@@ -15,15 +15,6 @@
 		9E629443208BA1780047DCCE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E629442208BA1780047DCCE /* Assets.xcassets */; };
 		9E629446208BA1780047DCCE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E629444208BA1780047DCCE /* LaunchScreen.storyboard */; };
 		9E629449208BA1780047DCCE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629448208BA1780047DCCE /* main.m */; };
-		9E629475208BA4430047DCCE /* CSSMultiRequestViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E62945F208BA4430047DCCE /* CSSMultiRequestViewModel.m */; };
-		9E629476208BA4430047DCCE /* CSSWebResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629463208BA4430047DCCE /* CSSWebResponse.m */; };
-		9E629477208BA4430047DCCE /* CSSWebRequestTaskCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629466208BA4430047DCCE /* CSSWebRequestTaskCollector.m */; };
-		9E629478208BA4430047DCCE /* CSSNetworkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629467208BA4430047DCCE /* CSSNetworkingManager.m */; };
-		9E629479208BA4430047DCCE /* CSSWebRequestService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E62946E208BA4430047DCCE /* CSSWebRequestService.m */; };
-		9E62947A208BA4430047DCCE /* CSSWebURLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E62946F208BA4430047DCCE /* CSSWebURLCache.m */; };
-		9E62947B208BA4430047DCCE /* CSSWebRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629470208BA4430047DCCE /* CSSWebRequest.m */; };
-		9E62947C208BA4430047DCCE /* CSSWebRequestFormItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629473208BA4430047DCCE /* CSSWebRequestFormItem.m */; };
-		9E62947D208BA4430047DCCE /* CSSWebRequestTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629474208BA4430047DCCE /* CSSWebRequestTask.m */; };
 		9E629481208BA4D40047DCCE /* CSSNetworkingHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E62947F208BA4D40047DCCE /* CSSNetworkingHandle.m */; };
 		9E62948F208BA4E50047DCCE /* CSSContentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629485208BA4E50047DCCE /* CSSContentModel.m */; };
 		9E629490208BA4E50047DCCE /* CSSListModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629486208BA4E50047DCCE /* CSSListModel.m */; };
@@ -35,6 +26,15 @@
 		9E62949C208BA4F70047DCCE /* CSSNetworkingCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629496208BA4F70047DCCE /* CSSNetworkingCacheTests.m */; };
 		9E62949D208BA4F70047DCCE /* CSSNetworkingToModelStyleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629497208BA4F70047DCCE /* CSSNetworkingToModelStyleTests.m */; };
 		9E62949E208BA4F70047DCCE /* CSSViewModelMultiRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E629499208BA4F70047DCCE /* CSSViewModelMultiRequestTests.m */; };
+		9E6350AE208CF5D1001B6CCC /* CSSMultiRequestViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E635099208CF5D1001B6CCC /* CSSMultiRequestViewModel.m */; };
+		9E6350AF208CF5D1001B6CCC /* CSSWebURLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E63509D208CF5D1001B6CCC /* CSSWebURLCache.m */; };
+		9E6350B0208CF5D1001B6CCC /* CSSWebRequestService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E63509F208CF5D1001B6CCC /* CSSWebRequestService.m */; };
+		9E6350B1208CF5D1001B6CCC /* CSSWebRequestTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6350A3208CF5D1001B6CCC /* CSSWebRequestTask.m */; };
+		9E6350B2208CF5D1001B6CCC /* CSSWebRequestFormItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6350A5208CF5D1001B6CCC /* CSSWebRequestFormItem.m */; };
+		9E6350B3208CF5D1001B6CCC /* CSSWebRequestTaskCollector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6350A8208CF5D1001B6CCC /* CSSWebRequestTaskCollector.m */; };
+		9E6350B4208CF5D1001B6CCC /* CSSNetworkingManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6350A9208CF5D1001B6CCC /* CSSNetworkingManager.m */; };
+		9E6350B5208CF5D1001B6CCC /* CSSWebResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6350AB208CF5D1001B6CCC /* CSSWebResponse.m */; };
+		9E6350B6208CF5D1001B6CCC /* CSSWebRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6350AD208CF5D1001B6CCC /* CSSWebRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,27 +63,6 @@
 		9E629448208BA1780047DCCE /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9E62944E208BA1780047DCCE /* CSSNetworkingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CSSNetworkingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E629454208BA1780047DCCE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9E62945F208BA4430047DCCE /* CSSMultiRequestViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSMultiRequestViewModel.m; sourceTree = "<group>"; };
-		9E629460208BA4430047DCCE /* CSSMultiRequestViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSMultiRequestViewModel.h; sourceTree = "<group>"; };
-		9E629461208BA4430047DCCE /* CSSNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSNetworking.h; sourceTree = "<group>"; };
-		9E629463208BA4430047DCCE /* CSSWebResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebResponse.m; sourceTree = "<group>"; };
-		9E629464208BA4430047DCCE /* CSSNetworkingManager+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CSSNetworkingManager+Private.h"; sourceTree = "<group>"; };
-		9E629465208BA4430047DCCE /* CSSWebRequestService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequestService.h; sourceTree = "<group>"; };
-		9E629466208BA4430047DCCE /* CSSWebRequestTaskCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequestTaskCollector.m; sourceTree = "<group>"; };
-		9E629467208BA4430047DCCE /* CSSNetworkingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSNetworkingManager.m; sourceTree = "<group>"; };
-		9E629468208BA4430047DCCE /* CSSWebRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequest.h; sourceTree = "<group>"; };
-		9E629469208BA4430047DCCE /* CSSNetworkingDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSNetworkingDefine.h; sourceTree = "<group>"; };
-		9E62946A208BA4430047DCCE /* CSSWebURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebURLCache.h; sourceTree = "<group>"; };
-		9E62946B208BA4430047DCCE /* CSSWebRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequestTask.h; sourceTree = "<group>"; };
-		9E62946C208BA4430047DCCE /* CSSWebRequestFormItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequestFormItem.h; sourceTree = "<group>"; };
-		9E62946D208BA4430047DCCE /* CSSWebResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebResponse.h; sourceTree = "<group>"; };
-		9E62946E208BA4430047DCCE /* CSSWebRequestService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequestService.m; sourceTree = "<group>"; };
-		9E62946F208BA4430047DCCE /* CSSWebURLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebURLCache.m; sourceTree = "<group>"; };
-		9E629470208BA4430047DCCE /* CSSWebRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequest.m; sourceTree = "<group>"; };
-		9E629471208BA4430047DCCE /* CSSNetworkingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSNetworkingManager.h; sourceTree = "<group>"; };
-		9E629472208BA4430047DCCE /* CSSWebRequestTaskCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequestTaskCollector.h; sourceTree = "<group>"; };
-		9E629473208BA4430047DCCE /* CSSWebRequestFormItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequestFormItem.m; sourceTree = "<group>"; };
-		9E629474208BA4430047DCCE /* CSSWebRequestTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequestTask.m; sourceTree = "<group>"; };
 		9E62947F208BA4D40047DCCE /* CSSNetworkingHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSNetworkingHandle.m; sourceTree = "<group>"; };
 		9E629480208BA4D40047DCCE /* CSSNetworkingHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSNetworkingHandle.h; sourceTree = "<group>"; };
 		9E629483208BA4E50047DCCE /* CSSListModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSListModel.h; sourceTree = "<group>"; };
@@ -103,6 +82,27 @@
 		9E629497208BA4F70047DCCE /* CSSNetworkingToModelStyleTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSNetworkingToModelStyleTests.m; sourceTree = "<group>"; };
 		9E629498208BA4F70047DCCE /* CSSUnitTestDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSUnitTestDefine.h; sourceTree = "<group>"; };
 		9E629499208BA4F70047DCCE /* CSSViewModelMultiRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSViewModelMultiRequestTests.m; sourceTree = "<group>"; };
+		9E635098208CF5D1001B6CCC /* CSSMultiRequestViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSMultiRequestViewModel.h; sourceTree = "<group>"; };
+		9E635099208CF5D1001B6CCC /* CSSMultiRequestViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSMultiRequestViewModel.m; sourceTree = "<group>"; };
+		9E63509A208CF5D1001B6CCC /* CSSNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSNetworking.h; sourceTree = "<group>"; };
+		9E63509C208CF5D1001B6CCC /* CSSWebRequestTaskCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequestTaskCollector.h; sourceTree = "<group>"; };
+		9E63509D208CF5D1001B6CCC /* CSSWebURLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebURLCache.m; sourceTree = "<group>"; };
+		9E63509E208CF5D1001B6CCC /* CSSNetworkingDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSNetworkingDefine.h; sourceTree = "<group>"; };
+		9E63509F208CF5D1001B6CCC /* CSSWebRequestService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequestService.m; sourceTree = "<group>"; };
+		9E6350A0208CF5D1001B6CCC /* CSSNetworkingManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSNetworkingManager.h; sourceTree = "<group>"; };
+		9E6350A1208CF5D1001B6CCC /* CSSWebRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequest.h; sourceTree = "<group>"; };
+		9E6350A2208CF5D1001B6CCC /* CSSNetworkingManager+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CSSNetworkingManager+Private.h"; sourceTree = "<group>"; };
+		9E6350A3208CF5D1001B6CCC /* CSSWebRequestTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequestTask.m; sourceTree = "<group>"; };
+		9E6350A4208CF5D1001B6CCC /* CSSWebResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebResponse.h; sourceTree = "<group>"; };
+		9E6350A5208CF5D1001B6CCC /* CSSWebRequestFormItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequestFormItem.m; sourceTree = "<group>"; };
+		9E6350A6208CF5D1001B6CCC /* CSSWebRequestService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequestService.h; sourceTree = "<group>"; };
+		9E6350A7208CF5D1001B6CCC /* CSSWebURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebURLCache.h; sourceTree = "<group>"; };
+		9E6350A8208CF5D1001B6CCC /* CSSWebRequestTaskCollector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequestTaskCollector.m; sourceTree = "<group>"; };
+		9E6350A9208CF5D1001B6CCC /* CSSNetworkingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSNetworkingManager.m; sourceTree = "<group>"; };
+		9E6350AA208CF5D1001B6CCC /* CSSWebRequestFormItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequestFormItem.h; sourceTree = "<group>"; };
+		9E6350AB208CF5D1001B6CCC /* CSSWebResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebResponse.m; sourceTree = "<group>"; };
+		9E6350AC208CF5D1001B6CCC /* CSSWebRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequestTask.h; sourceTree = "<group>"; };
+		9E6350AD208CF5D1001B6CCC /* CSSWebRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebRequest.m; sourceTree = "<group>"; };
 		AF9E4CC8F351E52631AC6D90 /* Pods-CSSNetworkingTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CSSNetworkingTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CSSNetworkingTests/Pods-CSSNetworkingTests.release.xcconfig"; sourceTree = "<group>"; };
 		D6B69E9B30273CDF813C84C4 /* Pods_CSSNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CSSNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA578BE411D346DA998B0E2A /* Pods-CSSNetworking.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CSSNetworking.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CSSNetworking/Pods-CSSNetworking.debug.xcconfig"; sourceTree = "<group>"; };
@@ -140,7 +140,7 @@
 		9E62942D208BA1770047DCCE = {
 			isa = PBXGroup;
 			children = (
-				9E62945D208BA4430047DCCE /* Sources */,
+				9E635096208CF5D1001B6CCC /* Sources */,
 				9E629438208BA1770047DCCE /* CSSNetworking */,
 				9E629451208BA1780047DCCE /* CSSNetworkingTests */,
 				9E629437208BA1770047DCCE /* Products */,
@@ -191,51 +191,6 @@
 			path = CSSNetworkingTests;
 			sourceTree = "<group>";
 		};
-		9E62945D208BA4430047DCCE /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				9E629461208BA4430047DCCE /* CSSNetworking.h */,
-				9E629462208BA4430047DCCE /* Core */,
-				9E62945E208BA4430047DCCE /* ViewModel */,
-			);
-			name = Sources;
-			path = ../Sources;
-			sourceTree = "<group>";
-		};
-		9E62945E208BA4430047DCCE /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				9E629460208BA4430047DCCE /* CSSMultiRequestViewModel.h */,
-				9E62945F208BA4430047DCCE /* CSSMultiRequestViewModel.m */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
-		9E629462208BA4430047DCCE /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				9E629469208BA4430047DCCE /* CSSNetworkingDefine.h */,
-				9E629471208BA4430047DCCE /* CSSNetworkingManager.h */,
-				9E629467208BA4430047DCCE /* CSSNetworkingManager.m */,
-				9E629464208BA4430047DCCE /* CSSNetworkingManager+Private.h */,
-				9E629468208BA4430047DCCE /* CSSWebRequest.h */,
-				9E629470208BA4430047DCCE /* CSSWebRequest.m */,
-				9E62946D208BA4430047DCCE /* CSSWebResponse.h */,
-				9E629463208BA4430047DCCE /* CSSWebResponse.m */,
-				9E62946B208BA4430047DCCE /* CSSWebRequestTask.h */,
-				9E629474208BA4430047DCCE /* CSSWebRequestTask.m */,
-				9E629465208BA4430047DCCE /* CSSWebRequestService.h */,
-				9E62946E208BA4430047DCCE /* CSSWebRequestService.m */,
-				9E629472208BA4430047DCCE /* CSSWebRequestTaskCollector.h */,
-				9E629466208BA4430047DCCE /* CSSWebRequestTaskCollector.m */,
-				9E62946C208BA4430047DCCE /* CSSWebRequestFormItem.h */,
-				9E629473208BA4430047DCCE /* CSSWebRequestFormItem.m */,
-				9E62946A208BA4430047DCCE /* CSSWebURLCache.h */,
-				9E62946F208BA4430047DCCE /* CSSWebURLCache.m */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
 		9E62947E208BA4AF0047DCCE /* Handle */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,6 +223,51 @@
 				9E62948B208BA4E50047DCCE /* CSSNormalRequest.m */,
 			);
 			path = Request;
+			sourceTree = "<group>";
+		};
+		9E635096208CF5D1001B6CCC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				9E63509A208CF5D1001B6CCC /* CSSNetworking.h */,
+				9E63509B208CF5D1001B6CCC /* Core */,
+				9E635097208CF5D1001B6CCC /* ViewModel */,
+			);
+			name = Sources;
+			path = ../Sources;
+			sourceTree = "<group>";
+		};
+		9E635097208CF5D1001B6CCC /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				9E635098208CF5D1001B6CCC /* CSSMultiRequestViewModel.h */,
+				9E635099208CF5D1001B6CCC /* CSSMultiRequestViewModel.m */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		9E63509B208CF5D1001B6CCC /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				9E63509E208CF5D1001B6CCC /* CSSNetworkingDefine.h */,
+				9E6350A0208CF5D1001B6CCC /* CSSNetworkingManager.h */,
+				9E6350A9208CF5D1001B6CCC /* CSSNetworkingManager.m */,
+				9E6350A2208CF5D1001B6CCC /* CSSNetworkingManager+Private.h */,
+				9E6350A1208CF5D1001B6CCC /* CSSWebRequest.h */,
+				9E6350AD208CF5D1001B6CCC /* CSSWebRequest.m */,
+				9E6350A4208CF5D1001B6CCC /* CSSWebResponse.h */,
+				9E6350AB208CF5D1001B6CCC /* CSSWebResponse.m */,
+				9E6350AC208CF5D1001B6CCC /* CSSWebRequestTask.h */,
+				9E6350A3208CF5D1001B6CCC /* CSSWebRequestTask.m */,
+				9E6350A6208CF5D1001B6CCC /* CSSWebRequestService.h */,
+				9E63509F208CF5D1001B6CCC /* CSSWebRequestService.m */,
+				9E63509C208CF5D1001B6CCC /* CSSWebRequestTaskCollector.h */,
+				9E6350A8208CF5D1001B6CCC /* CSSWebRequestTaskCollector.m */,
+				9E6350AA208CF5D1001B6CCC /* CSSWebRequestFormItem.h */,
+				9E6350A5208CF5D1001B6CCC /* CSSWebRequestFormItem.m */,
+				9E6350A7208CF5D1001B6CCC /* CSSWebURLCache.h */,
+				9E63509D208CF5D1001B6CCC /* CSSWebURLCache.m */,
+			);
+			path = Core;
 			sourceTree = "<group>";
 		};
 		A9DCE048DCCFB573E1567A79 /* Pods */ = {
@@ -450,18 +450,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E6350B3208CF5D1001B6CCC /* CSSWebRequestTaskCollector.m in Sources */,
+				9E6350B5208CF5D1001B6CCC /* CSSWebResponse.m in Sources */,
+				9E6350B0208CF5D1001B6CCC /* CSSWebRequestService.m in Sources */,
 				9E62943E208BA1770047DCCE /* ViewController.m in Sources */,
-				9E62947A208BA4430047DCCE /* CSSWebURLCache.m in Sources */,
-				9E62947B208BA4430047DCCE /* CSSWebRequest.m in Sources */,
 				9E629449208BA1780047DCCE /* main.m in Sources */,
-				9E629475208BA4430047DCCE /* CSSMultiRequestViewModel.m in Sources */,
-				9E629477208BA4430047DCCE /* CSSWebRequestTaskCollector.m in Sources */,
-				9E629476208BA4430047DCCE /* CSSWebResponse.m in Sources */,
+				9E6350B1208CF5D1001B6CCC /* CSSWebRequestTask.m in Sources */,
+				9E6350AE208CF5D1001B6CCC /* CSSMultiRequestViewModel.m in Sources */,
+				9E6350B2208CF5D1001B6CCC /* CSSWebRequestFormItem.m in Sources */,
 				9E62943B208BA1770047DCCE /* AppDelegate.m in Sources */,
-				9E62947C208BA4430047DCCE /* CSSWebRequestFormItem.m in Sources */,
-				9E62947D208BA4430047DCCE /* CSSWebRequestTask.m in Sources */,
-				9E629479208BA4430047DCCE /* CSSWebRequestService.m in Sources */,
-				9E629478208BA4430047DCCE /* CSSNetworkingManager.m in Sources */,
+				9E6350AF208CF5D1001B6CCC /* CSSWebURLCache.m in Sources */,
+				9E6350B6208CF5D1001B6CCC /* CSSWebRequest.m in Sources */,
+				9E6350B4208CF5D1001B6CCC /* CSSNetworkingManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

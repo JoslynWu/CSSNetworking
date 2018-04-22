@@ -18,6 +18,7 @@
 
 @interface CSSWebRequest : NSObject
 
+#pragma mark - ********************* 构建请求 *********************
 /**
  成功时的回调。
  - 一般用于单个请求的全局处理。
@@ -102,6 +103,8 @@
  */
 @property (nonatomic, assign) CSSNetworkingLogOptions logOptions;
 
+
+#pragma mark - ********************* 发送或取消请求 *********************
 /** 取消请求 */
 - (void)cancelFetch;
 

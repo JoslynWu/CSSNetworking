@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "CSSNetworking"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "一个灵活的网络框架（基于AFNetworking）。"
   s.license      = { :type => 'MIT License', :file => 'LICENSE' }
   s.authors      = { 'Joslyn' => 'cs_joslyn@foxmail.com' }
@@ -9,8 +9,30 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.source       = { :git => 'https://github.com/JoslynWu/CSSNetworking.git', :tag => s.version.to_s }
   s.requires_arc = true
-  s.source_files = 'Sources/**/*.{h,m}'
+
   s.public_header_files = 'Sources/**/*.{h}'
-  s.dependency 'CSSModel', '~> 0.0.3'
+  s.source_files = 'Sources/**/*.{h,m}'
+
   s.dependency 'AFNetworking', '~> 3.1.0'
+  s.dependency 'CSSModel', '~> 0.0.3'
+
+  # s.public_header_files = 'Sources/CSSNetworking.h'
+  # s.source_files = 'Sources/CSSNetworking.h'
+
+  # s.subspec 'Core' do |ss|
+  #   ss.dependency 'AFNetworking', '~> 3.1.0'
+  #   ss.dependency 'CSSModel', '~> 0.0.3'
+  #   # ss.dependency 'Sources/ViewModel'
+
+  #   ss.public_header_files = 'Sources/Core/*.{h}'
+  #   ss.source_files = 'Sources/Core/*.{h,m}'
+  # end
+
+  # s.subspec 'ViewModel' do |ss|
+  #   ss.dependency "Sources/Core"
+
+  #   ss.public_header_files = 'Sources/ViewModel/*.{h}'
+  #   ss.source_files = 'Sources/ViewModel/*.{h,m}'
+  # end
+
 end
