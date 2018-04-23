@@ -1,0 +1,17 @@
+platform :ios, '9.0'
+
+inhibit_all_warnings!
+
+target 'Example' do
+  use_frameworks!
+
+  pod 'AFNetworking', '~> 3.1.0'
+  pod 'YYModel', '~> 1.0.4'
+  pod 'CSSModel', '~> 0.0.3'
+  pod 'MJExtension', '~> 3.0.13'
+
+  target 'ExampleTests' do
+    inherit! :search_paths
+  end
+
+end
