@@ -11,3 +11,8 @@
 @interface CSSCacheRequest : CSSWebRequest
 
 @end
+
+
+@interface CSSForwarkCacheRequest : CSSCacheRequest
+
+@end

@@ -32,7 +32,6 @@ typedef NS_ENUM(NSInteger, CSSWebRequestMethod) {
 typedef NS_ENUM(NSInteger, CSSResponseSerializerType) {
     JSON,   // default
     IMAGE,
-    PDF,    // 暂未支持
 };
 
 /** 转模型的方式 */
@@ -46,7 +45,7 @@ typedef NS_ENUM(NSInteger, CSSProcessStyle) {
 /** 转模型的方式 */
 typedef NS_OPTIONS(NSUInteger, CSSNetworkingLogOptions) {
     Request     = 1 << 0,   // 请求log. 支持 CSSNetworkingManager 和 CSSWebRequest
-    Response    = 1 << 1,   // 相应log. 支持 CSSNetworkingManager 和 CSSWebRequest
+    Response    = 1 << 1,   // 响应log. 支持 CSSNetworkingManager 和 CSSWebRequest
     Exception   = 1 << 2,   // 异常(缓存异常)log. 支持 CSSNetworkingManager
     
     None        = 0 << 16,  // 无log. 支持CSSNetworkingManager 和 CSSWebRequest

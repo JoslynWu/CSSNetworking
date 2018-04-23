@@ -34,14 +34,10 @@
 // 不使用缓存
 - (void)testRequestNoCache {
     CSSNormalRequest *request = [CSSNormalRequest new];
+    __weak typeof(self) weakSelf = self;
     request.sucessBlock = ^(CSSWebResponse *resp) {
-        XCTAssertFalse(resp.respType == CACHE);
-        CSSNormalResponseData *respData = (CSSNormalResponseData *)resp.processData;
-        XCTAssertTrue(respData.json.content);
-        XCTAssertTrue(respData.json.content.list.count > 0);
-        CSSListModel *materModel = respData.json.content.list.firstObject;
-        XCTAssertTrue([materModel.title isEqualToString:@"list one"]);
-        XCTAssertTrue([materModel.url isEqualToString:@"https://www.baidu.com"]);
+        XCTAssertTrue(resp.respType == SUCCESS);
+        [weakSelf checkResultWithResp:resp];
         CSS_POST_NOTIF
     };
     request.failedBlock = ^(CSSWebResponse *resp) {
@@ -57,18 +53,15 @@
 - (void)testRequestCache {
     __block NSInteger count = 0;
     CSSCacheRequest *request = [CSSCacheRequest new];
+    __weak typeof(self) weakSelf = self;
     request.fromCacheBlock = ^(CSSWebResponse *resp) {
         XCTAssertTrue(resp.respType == CACHE);
+        [weakSelf checkResultWithResp:resp];
         count++;
     };
     request.sucessBlock = ^(CSSWebResponse *resp) {
-        CSSNormalResponseData *respData = (CSSNormalResponseData *)resp.processData;
-        XCTAssertTrue(respData.json.content);
-        XCTAssertTrue(respData.json.content.list.count > 0);
-        CSSListModel *materModel = respData.json.content.list.firstObject;
-        XCTAssertTrue([materModel.title isEqualToString:@"list one"]);
-        XCTAssertTrue([materModel.url isEqualToString:@"https://www.baidu.com"]);
-        XCTAssertFalse(resp.respType == CACHE);
+        [weakSelf checkResultWithResp:resp];
+        XCTAssertTrue(resp.respType == SUCCESS);
         count++;
         CSS_POST_NOTIF
     };
@@ -82,6 +75,78 @@
     CSS_WAIT
     XCTAssertTrue(count == 2);
     count = 0;
+}
+
+// 转发缓存 -- 直接设置属性
+- (void)testForwardRequestCacheByNormalRequest {
+    __block NSInteger count = 0;
+    __block NSInteger cacheCount = 0;
+    CSSNormalRequest *request = [CSSNormalRequest new];
+    request.needCache = YES;
+    request.needForwardCache = YES;
+    __weak typeof(self) weakSelf = self;
+    request.fromCacheBlock = ^(CSSWebResponse *resp) {
+        XCTAssertTrue(resp.respType == CACHE);
+        [weakSelf checkResultWithResp:resp];
+        cacheCount++;
+    };
+    request.sucessBlock = ^(CSSWebResponse *resp) {
+        [weakSelf checkResultWithResp:resp];
+        if (count == 0) {
+            XCTAssertTrue(resp.respType == CACHE);
+        } else {
+            XCTAssertTrue(resp.respType == SUCCESS);
+        }
+        count++;
+        CSS_POST_NOTIF
+    };
+    request.failedBlock = ^(CSSWebResponse *resp) {
+        XCTAssert(resp.respType == SUCCESS, @"请求成功，结果失败");
+        count++;
+        CSS_POST_NOTIF
+    };
+    request.requestData = [self requestDataForRequest];
+    [request sendRequest];
+    CSS_WAIT
+    XCTAssertTrue(count == 2);
+    XCTAssertTrue(cacheCount == 0);
+    count = 0;
+    cacheCount = 0;
+}
+
+// 转发缓存 -- 子类重写
+- (void)testForwardRequestCacheWithSubRequest {
+    __block NSInteger count = 0;
+    __block NSInteger cacheCount = 0;
+    CSSForwarkCacheRequest *request = [CSSForwarkCacheRequest new];
+    __weak typeof(self) weakSelf = self;
+    request.fromCacheBlock = ^(CSSWebResponse *resp) {
+        XCTAssertTrue(resp.respType == CACHE);
+        [weakSelf checkResultWithResp:resp];
+        cacheCount++;
+    };
+    request.sucessBlock = ^(CSSWebResponse *resp) {
+        [weakSelf checkResultWithResp:resp];
+        if (count == 0) {
+            XCTAssertTrue(resp.respType == CACHE);
+        } else {
+            XCTAssertTrue(resp.respType == SUCCESS);
+        }
+        count++;
+        CSS_POST_NOTIF
+    };
+    request.failedBlock = ^(CSSWebResponse *resp) {
+        XCTAssert(resp.respType == SUCCESS, @"请求成功，结果失败");
+        count++;
+        CSS_POST_NOTIF
+    };
+    request.requestData = [self requestDataForRequest];
+    [request sendRequest];
+    CSS_WAIT
+    XCTAssertTrue(count == 2);
+    XCTAssertTrue(cacheCount == 0);
+    count = 0;
+    cacheCount = 0;
 }
 
 #pragma mark - ********************* action *********************
@@ -101,6 +166,15 @@
     requestData.content = content;
     
     return requestData;
+}
+
+- (void)checkResultWithResp:(CSSWebResponse *)resp {
+    CSSNormalResponseData *respData = (CSSNormalResponseData *)resp.processData;
+    XCTAssertTrue(respData.json.content);
+    XCTAssertTrue(respData.json.content.list.count > 0);
+    CSSListModel *materModel = respData.json.content.list.firstObject;
+    XCTAssertTrue([materModel.title isEqualToString:@"list one"]);
+    XCTAssertTrue([materModel.url isEqualToString:@"https://www.baidu.com"]);
 }
 
 

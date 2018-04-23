@@ -130,25 +130,21 @@ static NSString * const CSSWebRequestServiceError = @"error";
         resp.task = weakTask;
         resp.processData = [weakSelf _toModelWithResponse:resp];
         if (respType == CACHE) {
-            if (weakTask.webRequest.fromCacheBlock) {
-                weakTask.webRequest.fromCacheBlock(resp);
+            if (weakTask.webRequest.isisNeedForwardCache) {
+                !weakTask.webRequest.sucessBlock ?: weakTask.webRequest.sucessBlock(resp);
+            } else {
+                !weakTask.webRequest.fromCacheBlock ?: weakTask.webRequest.fromCacheBlock(resp);
             }
         } else if(respType == SUCCESS) {
             [[CSSNetworkingManager sharedClient] globalSuccessHandleForTask:weakTask];
-            if(weakTask.webRequest.gloabDataProcess) {
-                weakTask.webRequest.gloabDataProcess(resp);
-            }
-            if(weakTask.webRequest.sucessBlock) {
-                weakTask.webRequest.sucessBlock(resp);
-            }
+            !weakTask.webRequest.gloabDataProcess ?: weakTask.webRequest.gloabDataProcess(resp);
+            !weakTask.webRequest.sucessBlock ?: weakTask.webRequest.sucessBlock(resp);
             if (weakTask.webRequest.isNeedCache && [[CSSNetworkingManager sharedClient] strictSuccessForResponse:resp]) {
                 [weakSelf storeCacheWithResponse:resp];
             }
         } else {
             [[CSSNetworkingManager sharedClient] globalFailureHandleForTask:weakTask];
-            if(weakTask.webRequest.failedBlock) {
-                weakTask.webRequest.failedBlock(resp);
-            }
+            !weakTask.webRequest.failedBlock ?: weakTask.webRequest.failedBlock(resp);
         }
         if (respType != CACHE) {
             [self _logWithTask:weakTask responseData:responseData];

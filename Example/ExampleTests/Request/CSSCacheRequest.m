@@ -34,3 +34,12 @@
 }
 
 @end
+
+
+@implementation CSSForwarkCacheRequest
+
+- (BOOL)isisNeedForwardCache {
+    return YES;
+}
+
+@end

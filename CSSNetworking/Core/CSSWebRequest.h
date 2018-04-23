@@ -104,6 +104,10 @@
 @property (nonatomic, assign) CSSNetworkingLogOptions logOptions;
 
 
+/** 将缓存的回调转发给成功的回调。默认 NO. （ respType 会标记为 CACHE ）*/
+@property (nonatomic, assign, getter=isisNeedForwardCache) BOOL needForwardCache;
+
+
 #pragma mark - ********************* 发送或取消请求 *********************
 /** 取消请求 */
 - (void)cancelFetch;

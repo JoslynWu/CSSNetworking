@@ -159,11 +159,6 @@ static inline NSString *CSSContentTypeForPathExtension(NSString *extension) {
         case IMAGE:
             [CSSNetworkingManager sharedClient].responseSerializer = [AFImageResponseSerializer serializer];
             break;
-            /*
-             case PDF:
-             [CSSWebRquestSessionManager sharedClient].responseSerializer = [CustomPDFResponseSerializer serializer];
-             break;
-             */
         default:
             break;
     }
