@@ -109,10 +109,7 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 /** 发送全部请求 */
 - (void)sendAllRequest;
 
-/**
- 发送指定请求
- - `sendAllRequest`在执行中的时候，不能发送单个请求，会导致`endAllRequest`提前执行。
- */
+/** 发送指定请求 */
 - (void)sendSingleRequestWithId:(NSInteger)rid;
 
 /** 获取指定请求信息 */
@@ -121,7 +118,7 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 /** 移除指定请求 */
 - (void)removeRequestInfoWithId:(NSInteger)rid;
 
-/** 全部请求结束时的回调 */
+/** 一组请求结束时的回调。单个请求也可视为一组请求 */
 @property (nonatomic, copy) void(^endAllRequest)(void);
 
 /**

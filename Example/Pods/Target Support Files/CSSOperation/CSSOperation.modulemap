@@ -1,0 +1,6 @@
+framework module CSSOperation {
+  umbrella header "CSSOperation-umbrella.h"
+
+  export *
+  module * { export * }
+}
