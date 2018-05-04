@@ -13,8 +13,8 @@
 #import <CSSModel/CSSModel.h>
 #import "CSSNetworkingManager+Private.h"
 
-static NSString * const CSSWebRequestServiceCode = @"code";
-static NSString * const CSSWebRequestServiceData = @"data";
+static NSString * const CSSWebRequestServiceRespType = @"respType";
+static NSString * const CSSWebRequestServiceDataOriginalData = @"originalData";
 static NSString * const CSSWebRequestServiceDataTask = @"dataTask";
 static NSString * const CSSWebRequestServiceUserInput = @"userInput";
 static NSString * const CSSWebRequestServiceError = @"error";
@@ -68,8 +68,8 @@ static NSString * const CSSWebRequestServiceError = @"error";
 }
 
 + (void)forwardSuccessDataWithRespons:(id)responseObj task:(CSSWebRequestTask *)task {
-    NSDictionary *returnDics =@{CSSWebRequestServiceCode: @(SUCCESS),
-                                CSSWebRequestServiceData: responseObj?:@{},
+    NSDictionary *returnDics =@{CSSWebRequestServiceRespType: @(SUCCESS),
+                                CSSWebRequestServiceDataOriginalData: responseObj ?: @{},
                                 CSSWebRequestServiceDataTask: task.dataTask ? : @{},
                                 CSSWebRequestServiceUserInput: task.kernel.userInput ?:@{}};
     
@@ -86,7 +86,7 @@ static NSString * const CSSWebRequestServiceError = @"error";
         error = [NSError errorWithDomain:task.webRequest.urlForRequest code:-101 userInfo:nil];
     }
     
-    NSDictionary *returnDics =@{CSSWebRequestServiceCode: @(FAILURE),
+    NSDictionary *returnDics =@{CSSWebRequestServiceRespType: @(FAILURE),
                                 CSSWebRequestServiceError: error,
                                 CSSWebRequestServiceUserInput: task.kernel.userInput ?: @{}};
     
@@ -102,15 +102,14 @@ static NSString * const CSSWebRequestServiceError = @"error";
     }
     
     if (task.webRequest.isNeedCache) {
+        // responseObj 第一次加载缓存的时为nil
         id responseObj = [[CSSWebURLCache sharedURLCache] cacheForRequest:urlRequest];
-        if (responseObj) {
-            NSDictionary *returnDics =@{CSSWebRequestServiceCode: @(CACHE),
-                                        CSSWebRequestServiceData: responseObj,
-                                        CSSWebRequestServiceDataTask: task.dataTask,
-                                        CSSWebRequestServiceUserInput: task.kernel.userInput ?: @{}};
-            
-            task.kernel.apiBlockOutputHandler(returnDics);
-        }
+        NSDictionary *returnDics =@{CSSWebRequestServiceRespType: @(CACHE),
+                                    CSSWebRequestServiceDataOriginalData: responseObj ?: @{},
+                                    CSSWebRequestServiceDataTask: task.dataTask,
+                                    CSSWebRequestServiceUserInput: task.kernel.userInput ?: @{}};
+        
+        task.kernel.apiBlockOutputHandler(returnDics);
     }
 }
 
@@ -121,16 +120,16 @@ static NSString * const CSSWebRequestServiceError = @"error";
     __weak typeof(self) weakSelf = self;
     __weak typeof(task) weakTask = task;
     kernel.apiBlockOutputHandler = ^(NSDictionary *responseData){
-        CSSWebResponseType respType = ((NSNumber *)[responseData objectForKey:CSSWebRequestServiceCode]).integerValue;
+        CSSWebResponseType respType = ((NSNumber *)[responseData objectForKey:CSSWebRequestServiceRespType]).integerValue;
         CSSWebResponse *resp = [[CSSWebResponse alloc] init];
-        resp.originalData = responseData[CSSWebRequestServiceData];
+        resp.originalData = responseData[CSSWebRequestServiceDataOriginalData];
         resp.userInput = responseData[CSSWebRequestServiceUserInput];
         resp.error = responseData[CSSWebRequestServiceError];
         resp.respType = respType;
         resp.task = weakTask;
         resp.processData = [weakSelf _toModelWithResponse:resp];
         if (respType == CACHE) {
-            if (weakTask.webRequest.isisNeedForwardCache) {
+            if (weakTask.webRequest.isNeedForwardCache) {
                 !weakTask.webRequest.sucessBlock ?: weakTask.webRequest.sucessBlock(resp);
             } else {
                 !weakTask.webRequest.fromCacheBlock ?: weakTask.webRequest.fromCacheBlock(resp);
@@ -172,6 +171,9 @@ static NSString * const CSSWebRequestServiceError = @"error";
 - (CSSWebResponseData *)_toModelWithResponse:(CSSWebResponse *)resp {
     CSSWebRequestTask *task = resp.task;
     if (!task.webRequest.responseDataClass) {
+        return nil;
+    }
+    if (resp.originalData.count <= 0) {
         return nil;
     }
     if ([resp.originalData isKindOfClass:[NSData class]]) {

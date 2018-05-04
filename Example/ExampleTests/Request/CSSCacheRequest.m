@@ -38,7 +38,7 @@
 
 @implementation CSSForwarkCacheRequest
 
-- (BOOL)isisNeedForwardCache {
+- (BOOL)isNeedForwardCache {
     return YES;
 }
 

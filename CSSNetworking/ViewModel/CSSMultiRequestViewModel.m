@@ -8,7 +8,6 @@
 
 #import "CSSMultiRequestViewModel.h"
 #import "CSSNetworkingManager+Private.h"
-#import <CSSOperation/CSSOperation.h>
 #import <CSSOperation/NSOperation+CSSOperation.h>
 
 @interface CSSMultiRequestInfo ()
@@ -25,6 +24,7 @@
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, CSSMultiRequestInfo *> *requestInfo;
 @property (nonatomic, assign, readwrite, getter=isRequesting) BOOL requesting;
 @property (nonatomic, strong) CSSOperation *currentOperation;
+@property (nonatomic, strong) NSDictionary<CSSOperationType, NSOperationQueue *> *operationQueues;
 
 @end
 
@@ -44,6 +44,9 @@
     _delegate = delegate;
     _requestInfo = [NSMutableDictionary new];
     _requesting = NO;
+    NSOperationQueue *serialQueue = [[NSOperationQueue alloc] init];
+    serialQueue.name = @"CSSMultiRequestViewModelOperationTypeSerialQueue";
+    _operationQueues = @{kCSSOperationTypeSerial: serialQueue};
     if (block) {
         block(self);
     }
@@ -60,24 +63,28 @@
     [self _buildRequestWithModel:model];
 }
 
-- (void)sendAllRequest {
+- (CSSOperation *)sendAllRequest {
     CSSOperation *operation = [[CSSOperation alloc] initWithOperationType:kCSSOperationTypeSerial];
+    operation.queues = self.operationQueues;
     __weak typeof(self) weakSelf = self;
     operation.blockOnCurrentThread = ^(CSSOperation *make) {
         weakSelf.currentOperation = make;
         [weakSelf _sendAllRequest];
     };
     [operation asyncStart];
+    return operation;
 }
 
-- (void)sendSingleRequestWithId:(NSInteger)rid {
+- (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid {
     CSSOperation *operation = [[CSSOperation alloc] initWithOperationType:kCSSOperationTypeSerial];
+    operation.queues = self.operationQueues;
     __weak typeof(self) weakSelf = self;
     operation.blockOnCurrentThread = ^(CSSOperation *make) {
         weakSelf.currentOperation = make;
         [weakSelf _sendSingleRequestWithId:rid];
     };
     [operation asyncStart];
+    return operation;
 }
 
 - (CSSRequestInfo *)requestInfoWithId:(NSInteger)rid {

@@ -73,9 +73,13 @@ static NSInteger operationCompleteCount = 0;
  测试多组请求混合发送时，endAllRequest回调是否有序。
  */
 - (void)testSendMixingRequest {
-    [self.vm sendAllRequest];
-    [self.vm sendSingleRequestWithId:requestIdThree];
-    [self.vm sendAllRequest];
+    CSSOperation *operation1 =  [self.vm sendAllRequest];
+    CSSOperation *operation2 = [self.vm sendSingleRequestWithId:requestIdThree];
+    CSSOperation *operation3 = [self.vm sendAllRequest];
+//    operation2.queuePriority = NSOperationQueuePriorityVeryHigh;
+    XCTAssertNotEqual(operation1, operation2);
+    XCTAssertNotEqual(operation1, operation3);
+    XCTAssertNotEqual(operation3, operation2);
     
     CSS_WAIT
     XCTAssertTrue(operationCompleteCount == 3);

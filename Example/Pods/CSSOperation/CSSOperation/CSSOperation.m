@@ -13,19 +13,19 @@ CSSOperationType const kCSSOperationTypeSingleton = @"CSSOperationTypeSingleton"
 CSSOperationType const kCSSOperationTypeSerial = @"CSSOperationTypeSerial";
 CSSOperationType const kCSSOperationTypeConcurrent = @"CSSOperationTypeConcurrent";
 
-static NSOperationQueue *_CSSOperationManagerQueue(CSSOperationType type) {
-    static NSMutableDictionary *queues = nil;
+static NSOperationQueue *_CSSOperationManagerGlobalQueue(CSSOperationType type) {
+    static NSMutableDictionary *globalQueues = nil;
     static dispatch_once_t onceToken;
     
     dispatch_once(&onceToken, ^{
-        queues = [NSMutableDictionary dictionary];
+        globalQueues = [NSMutableDictionary dictionary];
     });
     
-    NSOperationQueue *queue = queues[type];
+    NSOperationQueue *queue = globalQueues[type];
     if (!queue) {
         queue = [NSOperationQueue new];
         queue.name = type;
-        queues[type] = queue;
+        globalQueues[type] = queue;
     }
     
     return queue;
@@ -55,7 +55,16 @@ static NSOperationQueue *_CSSOperationManagerQueue(CSSOperationType type) {
     
     CSSOperation *tempOperation = (CSSOperation *)newOperation;
     CSSOperationType operationType = tempOperation.operationType ?: kCSSOperationTypeConcurrent;
-    NSOperationQueue *queue = _CSSOperationManagerQueue(operationType);
+    NSOperationQueue *queue = nil;
+    if (tempOperation.queues.count && [tempOperation.queues.allKeys containsObject:operationType]) {
+        if ([tempOperation.queues[operationType] isKindOfClass:[NSOperationQueue class]]) {
+            queue = tempOperation.queues[operationType];
+        } else {
+            queue = _CSSOperationManagerGlobalQueue(operationType);
+        }
+    } else {
+        queue = _CSSOperationManagerGlobalQueue(operationType);
+    }
     
     if (operationType == kCSSOperationTypeSingleton) {
         for (NSOperation *operation in [queue operations]) {
@@ -78,6 +87,7 @@ static NSOperationQueue *_CSSOperationManagerQueue(CSSOperationType type) {
 
 #pragma mark - Pubilc Methods
 - (void)start {
+    
     if ([self isCancelled]) {
         self.finished = YES;
         return;

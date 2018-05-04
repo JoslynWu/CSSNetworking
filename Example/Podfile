@@ -9,7 +9,7 @@ target 'Example' do
   pod 'YYModel', '~> 1.0.4'
   pod 'CSSModel', '~> 0.0.3'
   pod 'MJExtension', '~> 3.0.13'
-  pod 'CSSOperation', '~> 0.0.2'
+  pod 'CSSOperation', '~> 0.0.3'
 
   target 'ExampleTests' do
     inherit! :search_paths
