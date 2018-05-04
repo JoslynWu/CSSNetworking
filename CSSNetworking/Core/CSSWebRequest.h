@@ -22,7 +22,7 @@
 /**
  成功时的回调。
  - 一般用于单个请求的全局处理。
- - e.g. 直接在青丘里做用户信息处理。
+ - e.g. 直接在请求里做用户信息处理。
  */
 @property (nonatomic, copy) void(^gloabDataProcess)(CSSWebResponse *resp);
 
