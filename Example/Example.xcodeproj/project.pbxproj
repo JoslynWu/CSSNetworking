@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		7CC6D1120354F3623E75315F /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B674C5DC8E4EDAF769DEFE0F /* Pods_Example.framework */; };
 		7DA3DB0A69B344026FA4AAE2 /* Pods_ExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B84E17FD0F55EB881ED8E7B /* Pods_ExampleTests.framework */; };
+		9E3B27CE209C5C65005B3102 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 9E3B27CB209C5C65005B3102 /* LICENSE */; };
+		9E3B27CF209C5C65005B3102 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 9E3B27CC209C5C65005B3102 /* README.md */; };
+		9E3B27D0209C5C65005B3102 /* CSSNetworking.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 9E3B27CD209C5C65005B3102 /* CSSNetworking.podspec */; };
 		9E7A7608209B0076008E4A3E /* CSSViewModelMixingRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7A7607209B0076008E4A3E /* CSSViewModelMixingRequestTests.m */; };
 		9E96F21C208D7BD500F8443D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F21B208D7BD500F8443D /* AppDelegate.m */; };
 		9E96F21F208D7BD500F8443D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F21E208D7BD500F8443D /* ViewController.m */; };
@@ -52,6 +55,9 @@
 		0A2F5E33F52BA88C7AA57F75 /* Pods-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		553F123138178563F765CEA2 /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		9B84E17FD0F55EB881ED8E7B /* Pods_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E3B27CB209C5C65005B3102 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		9E3B27CC209C5C65005B3102 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		9E3B27CD209C5C65005B3102 /* CSSNetworking.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CSSNetworking.podspec; path = ../CSSNetworking.podspec; sourceTree = "<group>"; };
 		9E7A7607209B0076008E4A3E /* CSSViewModelMixingRequestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CSSViewModelMixingRequestTests.m; sourceTree = "<group>"; };
 		9E96F217208D7BD500F8443D /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E96F21A208D7BD500F8443D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -150,6 +156,9 @@
 				9E96F218208D7BD500F8443D /* Products */,
 				76CF486269C8079B0FDF2DE3 /* Pods */,
 				CE2ECD4211E6AA9E0989465B /* Frameworks */,
+				9E3B27CD209C5C65005B3102 /* CSSNetworking.podspec */,
+				9E3B27CB209C5C65005B3102 /* LICENSE */,
+				9E3B27CC209C5C65005B3102 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -368,8 +377,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E3B27D0209C5C65005B3102 /* CSSNetworking.podspec in Resources */,
 				9E96F227208D7BD700F8443D /* LaunchScreen.storyboard in Resources */,
 				9E96F224208D7BD700F8443D /* Assets.xcassets in Resources */,
+				9E3B27CF209C5C65005B3102 /* README.md in Resources */,
+				9E3B27CE209C5C65005B3102 /* LICENSE in Resources */,
 				9E96F222208D7BD500F8443D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -636,7 +648,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Example/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joslyn.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -650,7 +665,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Example/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joslyn.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -664,7 +682,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joslyn.ExampleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -679,7 +701,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joslyn.ExampleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";

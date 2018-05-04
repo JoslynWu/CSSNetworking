@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "CSSNetworking"
-  s.version      = "0.0.4"
+  s.version      = "0.0.5"
   s.summary      = "一个灵活的网络框架（基于AFNetworking）。"
   s.license      = { :type => 'MIT License', :file => 'LICENSE' }
   s.authors      = { 'Joslyn' => 'cs_joslyn@foxmail.com' }
@@ -22,6 +22,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'ViewModel' do |ss|
+    ss.dependency 'CSSOperation', '~> 0.0.3'
     ss.dependency "CSSNetworking/Core"
     ss.public_header_files = 'CSSNetworking/ViewModel/*.{h}'
     ss.source_files = 'CSSNetworking/ViewModel/*.{h,m}'
