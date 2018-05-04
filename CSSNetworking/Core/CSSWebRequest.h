@@ -35,7 +35,6 @@
 /**
  通过缓存加载的回调
  - `needCache` 需要为YES
- - 第一次缓存时不会执行
  */
 @property (nonatomic, copy) void(^fromCacheBlock)(CSSWebResponse *resp);
 
@@ -105,7 +104,7 @@
 
 
 /** 将缓存的回调转发给成功的回调。默认 NO. （ respType 会标记为 CACHE ）*/
-@property (nonatomic, assign, getter=isisNeedForwardCache) BOOL needForwardCache;
+@property (nonatomic, assign, getter=isNeedForwardCache) BOOL needForwardCache;
 
 
 #pragma mark - ********************* 发送或取消请求 *********************

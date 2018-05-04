@@ -16,6 +16,7 @@ PODS:
     - AFNetworking/NSURLSession
   - CSSModel (0.0.3):
     - CSSPrettyPrinted
+  - CSSOperation (0.0.3)
   - CSSPrettyPrinted (0.1.0)
   - MJExtension (3.0.13)
   - YYModel (1.0.4)
@@ -23,6 +24,7 @@ PODS:
 DEPENDENCIES:
   - AFNetworking (~> 3.1.0)
   - CSSModel (~> 0.0.3)
+  - CSSOperation (~> 0.0.3)
   - MJExtension (~> 3.0.13)
   - YYModel (~> 1.0.4)
 
@@ -30,6 +32,7 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - AFNetworking
     - CSSModel
+    - CSSOperation
     - CSSPrettyPrinted
     - MJExtension
     - YYModel
@@ -37,10 +40,11 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
   CSSModel: 6181c60d54c4a6e74f54ea3454a2691764fb9053
+  CSSOperation: 35ecf44a1ba8e7932199dc41271bd74b0e55dad4
   CSSPrettyPrinted: 3c700dea4f7f971634096e902ff69afd0753ea42
   MJExtension: 5932755f451458eefa24239358817f8d291240c7
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
 
-PODFILE CHECKSUM: f0c4be72cabbc5fd34eaad93151d843d11f95266
+PODFILE CHECKSUM: 979acb6c3c1ea9b5e74a9c77831045dd512a96fb
 
 COCOAPODS: 1.5.0

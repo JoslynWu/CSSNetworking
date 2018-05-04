@@ -15,6 +15,7 @@
 #import "CSSNetworking.h"
 #import "CSSCacheRequest.h"
 
+static NSUInteger cacheRequetCount = 0;
 #pragma mark  - TestCase
 @interface CSSCacheTests : XCTestCase
 
@@ -91,13 +92,16 @@
         cacheCount++;
     };
     request.sucessBlock = ^(CSSWebResponse *resp) {
+        count++;
+        if (!resp.originalData.count) {
+            return;
+        }
         [weakSelf checkResultWithResp:resp];
-        if (count == 0) {
+        if (count == 1) {
             XCTAssertTrue(resp.respType == CACHE);
         } else {
             XCTAssertTrue(resp.respType == SUCCESS);
         }
-        count++;
         CSS_POST_NOTIF
     };
     request.failedBlock = ^(CSSWebResponse *resp) {
@@ -126,13 +130,16 @@
         cacheCount++;
     };
     request.sucessBlock = ^(CSSWebResponse *resp) {
+        count++;
+        if (!resp.originalData.count) {
+            return;
+        }
         [weakSelf checkResultWithResp:resp];
-        if (count == 0) {
+        if (count == 1) {
             XCTAssertTrue(resp.respType == CACHE);
         } else {
             XCTAssertTrue(resp.respType == SUCCESS);
         }
-        count++;
         CSS_POST_NOTIF
     };
     request.failedBlock = ^(CSSWebResponse *resp) {

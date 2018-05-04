@@ -21,10 +21,16 @@
 /** 响应的结果类型 */
 @property (nonatomic, assign) CSSWebResponseType respType;
 
-/** 响应解析后的对象 */
+/**
+ 响应解析后的对象
+ - 第一次从缓存加载时为nil(因为还没有可持久化过)
+ */
 @property (nonatomic, strong) CSSWebResponseData *processData;
 
-/** 响应的原始数据 */
+/**
+ 响应的原始数据
+ - 第一次从缓存加载时为nil(因为还没有可持久化过)
+ */
 @property (nonatomic, strong) NSDictionary *originalData;
 
 /** 请求失败时的 error */

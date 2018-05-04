@@ -10,6 +10,7 @@
 #import "CSSNetworkingDefine.h"
 #import "CSSWebRequest.h"
 #import "CSSWebResponse.h"
+#import <CSSOperation/CSSOperation.h>
 
 #pragma mark - ********************* CSSMultiRequestInfo *********************
 NS_ASSUME_NONNULL_BEGIN
@@ -53,7 +54,7 @@ typedef CSSMultiRequestViewModel vmCls;
 
 /**
  请求返回后调用
- - 在 `success`和`failed`调用
+ - 在 `success`和`failed`之前调用
  */
 - (void)viewModel:(vmCls *)vm complete:(CSSWebResponse *)resp requestId:(NSInteger)rid;
 
@@ -73,7 +74,6 @@ typedef CSSMultiRequestViewModel vmCls;
 /**
  加载缓存时回调。
  - request.needCache = NO; 时不调用。
- - 缓存为nil时不会调用（e.g. 第一次读缓存时）。
  */
 - (void)viewModel:(vmCls *)vm cache:(CSSWebResponse *)resp requestId:(NSInteger)rid;
 
@@ -106,14 +106,20 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  */
 - (void)addRequestWithId:(NSInteger)rid config:(CSSMultiRequestConfigBlcok)configBlock;
 
-/** 发送全部请求 */
-- (void)sendAllRequest;
+/**
+ 发送全部请求
+
+ @return 操作组。可以指定其优先级等
+ */
+- (CSSOperation *)sendAllRequest;
 
 /**
  发送指定请求
- - `sendAllRequest`在执行中的时候，不能发送单个请求，会导致`endAllRequest`提前执行。
+
+ @param rid 请求的ID
+ @return 操作组。可以指定其优先级等
  */
-- (void)sendSingleRequestWithId:(NSInteger)rid;
+- (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid;
 
 /** 获取指定请求信息 */
 - (CSSRequestInfo *)requestInfoWithId:(NSInteger)rid;
@@ -121,7 +127,7 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 /** 移除指定请求 */
 - (void)removeRequestInfoWithId:(NSInteger)rid;
 
-/** 全部请求结束时的回调 */
+/** 一组请求结束时的回调。单个请求也可视为一组请求 */
 @property (nonatomic, copy) void(^endAllRequest)(void);
 
 /**
