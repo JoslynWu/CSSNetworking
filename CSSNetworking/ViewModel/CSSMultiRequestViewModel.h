@@ -113,10 +113,10 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 /**
  发送指定几个请求
 
- @param rids id序列，以 nil 结束
+ @param rid id序列，以 nil 结束
  @return 操作组。可以指定其优先级等
  */
-- (CSSOperation *)sendRequestWithIds:(NSInteger)rids, ...;
+- (CSSOperation *)sendRequestWithIds:(NSInteger)rid, ...;
 
 /**
  发送指定请求

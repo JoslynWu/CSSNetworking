@@ -90,7 +90,7 @@ static NSInteger requestCount = 0;
 }
 
 - (void)requestTestForOneWithResp:(CSSWebResponse *)resp requestId:(NSInteger)rid {
-    CSSNormalResponseData *respData = (CSSNormalResponseData *)resp.processData;
+    CSSNormalResponseData *respData = resp.processData;
     XCTAssertTrue(respData.json.content);
     XCTAssertTrue(respData.json.content.list.count > 0);
     CSSDataModel *dataModel = respData.json;
@@ -101,7 +101,7 @@ static NSInteger requestCount = 0;
 }
 
 - (void)requestTestForThreeWithResp:(CSSWebResponse *)resp requestId:(NSInteger)rid {
-    CSSNormalResponseData *respData = (CSSNormalResponseData *)resp.processData;
+    CSSNormalResponseData *respData = resp.processData;
     XCTAssertTrue(respData.json.content);
     XCTAssertTrue(respData.json.content.list.count > 0);
     CSSDataModel *dataModel = respData.json;
