@@ -128,7 +128,7 @@
 
     for (NSNumber *rid in rids) {
         if (![self.requestInfo.allKeys containsObject:rid]) {
-            NSLog(@"[CSSNetworking] contains one invalid rid %ld", rid.integerValue);
+            CSSNetworkLog(@"[CSSNetworking] contains one invalid rid %li", rid.integerValue);
             continue;
         }
         [self.activeRids addObject:rid];
