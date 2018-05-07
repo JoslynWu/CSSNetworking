@@ -49,13 +49,20 @@ static NSInteger operationCompleteCount = 0;
             requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"info"];
         }];
         
-        make.endAllRequest = ^{
+        make.requestComplete = ^(NSArray<NSNumber *> * _Nonnull rids) {
             operationCompleteCount++;
             if (operationCompleteCount == 1) {
+                XCTAssertTrue([rids containsObject:@(requestIdOne)]);
+                XCTAssertTrue([rids containsObject:@(requestIdTwo)]);
+                XCTAssertTrue([rids containsObject:@(requestIdThree)]);
                 XCTAssertTrue(requestCount == 3);
             } else if (operationCompleteCount == 2) {
+                XCTAssertTrue([rids containsObject:@(requestIdThree)]);
                 XCTAssertTrue(requestCount == (3 + 1));
             } else if (operationCompleteCount == 3) {
+                XCTAssertTrue([rids containsObject:@(requestIdOne)]);
+                XCTAssertTrue([rids containsObject:@(requestIdTwo)]);
+                XCTAssertTrue([rids containsObject:@(requestIdThree)]);
                 XCTAssertTrue(requestCount == (3 + 1 + 3));
                 CSS_POST_NOTIF
             }
@@ -70,7 +77,7 @@ static NSInteger operationCompleteCount = 0;
 }
 
 /**
- 测试多组请求混合发送时，endAllRequest回调是否有序。
+ 测试多组请求混合发送时，requestComplete回调是否有序。
  */
 - (void)testSendMixingRequest {
     CSSOperation *operation1 =  [self.vm sendAllRequest];

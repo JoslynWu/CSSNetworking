@@ -16,7 +16,7 @@
 NS_ASSUME_NONNULL_BEGIN
 @interface CSSMultiRequestInfo : NSObject
 
-/** 请求标记 */
+/** 请求标记. 不能等于NSIntegerMax */
 @property (nonatomic, assign) NSInteger requestId;
 
 /** 请求实例 */
@@ -28,14 +28,11 @@ NS_ASSUME_NONNULL_BEGIN
 /** 响应对象 */
 @property (nonatomic, strong) CSSWebResponseData *respData;
 
-/** 单个请求是否完成 */
-@property (nonatomic, assign, readonly, getter=isRequestComplete) BOOL requestComplete;
-
 /**
  是否为例外。
  - 例外是相对于`sendAllRequest`而言。
  - YES 表示调用`sendAllRequest`时不用触发请求；
- - NO 反之。可以在之后单独发送请求（通过`sendSingleRequestWithId:`）。
+ - NO 反之。可以在之后单独发送请求（通过`sendSingleRequestWithId:`或者`sendRequestWithIds:`）。
  */
 @property (nonatomic, assign, getter=isIndependent) BOOL independent;
 
@@ -114,6 +111,14 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 - (CSSOperation *)sendAllRequest;
 
 /**
+ 发送指定几个请求
+
+ @param rids id序列，以 nil 结束
+ @return 操作组。可以指定其优先级等
+ */
+- (CSSOperation *)sendRequestWithIds:(NSInteger)rids, ...;
+
+/**
  发送指定请求
 
  @param rid 请求的ID
@@ -127,14 +132,12 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 /** 移除指定请求 */
 - (void)removeRequestInfoWithId:(NSInteger)rid;
 
-/** 一组请求结束时的回调。单个请求也可视为一组请求 */
-@property (nonatomic, copy) void(^endAllRequest)(void);
-
 /**
- 当前`CSSMultiRequestViewModel`是否在请求中
- - 只要有一个请求在发送中就会标记为YES
+ 一组请求结束时的回调。
+ - 单个请求也可视为一组请求
+ - rids 为当前请求组的 id 序列
  */
-@property (nonatomic, assign, readonly, getter=isRequesting) BOOL requesting;
+@property (nonatomic, copy) void(^requestComplete)(NSArray<NSNumber *> *rids);
 
 @end
 NS_ASSUME_NONNULL_END

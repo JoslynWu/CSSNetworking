@@ -48,7 +48,10 @@ static NSInteger requestCount = 0;
             requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"info"];
         }];
         
-        make.endAllRequest = ^{
+        make.requestComplete = ^(NSArray<NSNumber *> * _Nonnull rids) {
+            XCTAssertTrue([rids containsObject:@(requestIdOne)]);
+            XCTAssertTrue([rids containsObject:@(requestIdTwo)]);
+            XCTAssertTrue([rids containsObject:@(requestIdThree)]);
             XCTAssertTrue(requestCount == 3);
             CSS_POST_NOTIF
         };

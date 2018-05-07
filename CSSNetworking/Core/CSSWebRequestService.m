@@ -184,16 +184,15 @@ static NSString * const CSSWebRequestServiceError = @"error";
         return  [task.webRequest.responseDataClass css_modelWithJson:resp.originalData];
     }
     
-    Class responseDataClass = task.webRequest.responseDataClass;
     if (task.webRequest.processStyle == YYModel) {
         NSString *methodString = @"yy_modelWithJSON:";
-        NSAssert([responseDataClass respondsToSelector:NSSelectorFromString(methodString)], @"plase import YYModel");
+        NSAssert([task.webRequest.responseDataClass respondsToSelector:NSSelectorFromString(methodString)], @"plase import YYModel");
         return [self modelToJsonWithMethod:methodString response:resp];
     }
     
     if (task.webRequest.processStyle == MJExtension) {
         NSString *methodString = @"mj_objectWithKeyValues:";
-        NSAssert([responseDataClass respondsToSelector:NSSelectorFromString(methodString)], @"plase import MJExtension");
+        NSAssert([task.webRequest.responseDataClass respondsToSelector:NSSelectorFromString(methodString)], @"plase import MJExtension");
         return [self modelToJsonWithMethod:methodString response:resp];
     }
     
@@ -227,7 +226,6 @@ static NSString * const CSSWebRequestServiceError = @"error";
         return;
     }
     
-    NSString *postString = [[NSString alloc] initWithData:task.dataTask.originalRequest.HTTPBody encoding:NSUTF8StringEncoding];
     CSSNetworkLog(@"\n****************** [CSSNetworking] responseData: ****************** \
                  \nclass: %@ \
                  \nid: %zd \
@@ -238,7 +236,7 @@ static NSString * const CSSWebRequestServiceError = @"error";
                  NSStringFromClass(task.webRequest.responseDataClass),
                  task.tid,
                  task.dataTask.originalRequest.URL.absoluteString,
-                 postString,
+                 [[NSString alloc] initWithData:task.dataTask.originalRequest.HTTPBody encoding:NSUTF8StringEncoding],
                  responseData.css_debugSting);
 }
 

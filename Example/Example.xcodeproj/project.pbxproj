@@ -12,6 +12,7 @@
 		9E3B27CE209C5C65005B3102 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 9E3B27CB209C5C65005B3102 /* LICENSE */; };
 		9E3B27CF209C5C65005B3102 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 9E3B27CC209C5C65005B3102 /* README.md */; };
 		9E3B27D0209C5C65005B3102 /* CSSNetworking.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 9E3B27CD209C5C65005B3102 /* CSSNetworking.podspec */; };
+		9E3B27D2209FFDE9005B3102 /* CSSViewModelCustomRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3B27D1209FFDE9005B3102 /* CSSViewModelCustomRequestTests.m */; };
 		9E7A7608209B0076008E4A3E /* CSSViewModelMixingRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7A7607209B0076008E4A3E /* CSSViewModelMixingRequestTests.m */; };
 		9E96F21C208D7BD500F8443D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F21B208D7BD500F8443D /* AppDelegate.m */; };
 		9E96F21F208D7BD500F8443D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F21E208D7BD500F8443D /* ViewController.m */; };
@@ -58,6 +59,7 @@
 		9E3B27CB209C5C65005B3102 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		9E3B27CC209C5C65005B3102 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		9E3B27CD209C5C65005B3102 /* CSSNetworking.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = CSSNetworking.podspec; path = ../CSSNetworking.podspec; sourceTree = "<group>"; };
+		9E3B27D1209FFDE9005B3102 /* CSSViewModelCustomRequestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CSSViewModelCustomRequestTests.m; sourceTree = "<group>"; };
 		9E7A7607209B0076008E4A3E /* CSSViewModelMixingRequestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CSSViewModelMixingRequestTests.m; sourceTree = "<group>"; };
 		9E96F217208D7BD500F8443D /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E96F21A208D7BD500F8443D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 				9E96F25F208D7CF500F8443D /* CSSViewModelMultiRequestTests.m */,
 				9E96F260208D7CF500F8443D /* CSSViewModelSingleRequetTests.m */,
 				9E7A7607209B0076008E4A3E /* CSSViewModelMixingRequestTests.m */,
+				9E3B27D1209FFDE9005B3102 /* CSSViewModelCustomRequestTests.m */,
 			);
 			path = ExampleTests;
 			sourceTree = "<group>";
@@ -490,6 +493,7 @@
 				9E96F27D208D7CF600F8443D /* CSSNetworkingHandle.m in Sources */,
 				9E7A7608209B0076008E4A3E /* CSSViewModelMixingRequestTests.m in Sources */,
 				9E96F279208D7CF600F8443D /* CSSNormalRequest.m in Sources */,
+				9E3B27D2209FFDE9005B3102 /* CSSViewModelCustomRequestTests.m in Sources */,
 				9E96F275208D7CF600F8443D /* CSSViewModelMultiRequestTests.m in Sources */,
 				9E96F27F208D7CF600F8443D /* CSSNetworkingCacheTests.m in Sources */,
 				9E96F277208D7CF600F8443D /* CSSNetworkingOriginTests.m in Sources */,

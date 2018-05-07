@@ -1,8 +1,8 @@
 //
-//  CSSViewModelSingleRequetTests.m
-//  CSSNetworkingTests
+//  CSSViewModelCustomRequestTests.m
+//  ExampleTests
 //
-//  Created by Joslyn Wu on 2018/2/7.
+//  Created by Joslyn Wu on 2018/5/7.
 //  Copyright © 2018年 Joslyn Wu. All rights reserved.
 //
 
@@ -14,18 +14,19 @@
 
 typedef NS_ENUM(NSInteger, requestId) {
     requestIdOne = 1,
-    requestIdTwo
+    requestIdTwo,
+    requestIdThree
 };
 
 static NSInteger requestCount = 0;
 
-@interface CSSViewModelSingleRequetTests : XCTestCase <CSSMultiRequestViewModelDelegate>
+@interface CSSViewModelCustomRequestTests : XCTestCase <CSSMultiRequestViewModelDelegate>
 
 @property (nonatomic, strong) CSSMultiRequestViewModel *vm;
 
 @end
 
-@implementation CSSViewModelSingleRequetTests
+@implementation CSSViewModelCustomRequestTests
 
 - (void)setUp {
     [super setUp];
@@ -38,17 +39,23 @@ static NSInteger requestCount = 0;
         }];
         
         [make addRequestWithId:requestIdTwo config:^(CSSRequestInfo * _Nonnull requestInfo) {
-            requestInfo.independent = YES;
             requestInfo.request = [CSSCacheRequest new];
             requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
         }];
         
+        [make addRequestWithId:requestIdThree config:^(CSSRequestInfo * _Nonnull requestInfo) {
+            requestInfo.request = [CSSNormalRequest new];
+            requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"info"];
+        }];
+        
         make.requestComplete = ^(NSArray<NSNumber *> * _Nonnull rids) {
-            XCTAssertTrue(rids.count > 0);
-            XCTAssertTrue(requestCount == 1);
+            XCTAssertTrue([rids containsObject:@(requestIdTwo)]);
+            XCTAssertTrue([rids containsObject:@(requestIdThree)]);
+            XCTAssertTrue(requestCount == 2);
             CSS_POST_NOTIF
         };
     }];
+    
 }
 
 - (void)tearDown {
@@ -56,22 +63,11 @@ static NSInteger requestCount = 0;
     [super tearDown];
 }
 
-- (void)testSingleRequestWithNoCache {
-    CSSRequestInfo *info = (CSSRequestInfo *)[self.vm requestInfoWithId:requestIdOne];
-    ((CSSNormalRequestData *)info.requestData).contentCode = @"tool";
-    [self.vm sendSingleRequestWithId:requestIdOne];
+// 发送指定几个请求
+- (void)testSendCustomRequest {
+    [self.vm sendRequestWithIds:requestIdThree, requestIdTwo, nil];
     
     CSS_WAIT
-    
-    requestCount--;
-}
-
-- (void)testSingleRequestWithCache {
-    [self.vm sendSingleRequestWithId:requestIdTwo];
-    
-    CSS_WAIT
-    
-    requestCount--;
 }
 
 #pragma mark - ********************* action *********************
@@ -104,15 +100,26 @@ static NSInteger requestCount = 0;
     XCTAssertTrue([materModel.url isEqualToString:@"https://www.baidu.com"]);
 }
 
+- (void)requestTestForThreeWithResp:(CSSWebResponse *)resp requestId:(NSInteger)rid {
+    CSSNormalResponseData *respData = (CSSNormalResponseData *)resp.processData;
+    XCTAssertTrue(respData.json.content);
+    XCTAssertTrue(respData.json.content.list.count > 0);
+    CSSDataModel *dataModel = respData.json;
+    XCTAssertTrue([dataModel.contentCode isEqualToString:@"info"]);
+    CSSListModel *materModel = dataModel.content.list.firstObject;
+    XCTAssertTrue([materModel.title isEqualToString:@"list one"]);
+    XCTAssertTrue([materModel.url isEqualToString:@"https://www.baidu.com"]);
+}
+
 #pragma mark  -  CSSMultiRequestViewModelDelegate
 - (void)viewModel:(vmCls *)vm complete:(CSSWebResponse *)resp requestId:(NSInteger)rid {
     if (rid == requestIdOne || rid == requestIdTwo) {
         [self requestTestForOneWithResp:resp requestId:rid];
-        CSSRequestInfo *info = [vm requestInfoWithId:rid];
-        if (!info.independent) {
-            XCTAssertTrue(rid == 1);
-        }
+    } else if (rid == requestIdThree) {
+        XCTAssertFalse(resp.respType == CACHE);
+        [self requestTestForThreeWithResp:resp requestId:rid];
     }
+    XCTAssertTrue(rid == requestIdTwo || rid == requestIdThree);
     if (!(resp.respType == CACHE)) {
         requestCount++;
     }
@@ -122,6 +129,9 @@ static NSInteger requestCount = 0;
     if (rid == requestIdOne || rid == requestIdTwo) {
         XCTAssertFalse(resp.respType == CACHE);
         [self requestTestForOneWithResp:resp requestId:rid];
+    } else if (rid == requestIdThree) {
+        XCTAssertFalse(resp.respType == CACHE);
+        [self requestTestForThreeWithResp:resp requestId:rid];
     }
 }
 
@@ -132,10 +142,8 @@ static NSInteger requestCount = 0;
 - (void)viewModel:(vmCls *)vm cache:(CSSWebResponse *)resp requestId:(NSInteger)rid {
     if (rid == requestIdTwo) {
         XCTAssertTrue(resp.respType == CACHE);
-        [self requestTestForOneWithResp:resp requestId:rid];
     }
 }
-
 
 
 @end
