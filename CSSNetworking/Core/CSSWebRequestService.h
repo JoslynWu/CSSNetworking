@@ -10,6 +10,8 @@
 #import "CSSNetworkingDefine.h"
 #import "AFSecurityPolicy.h"
 
+FOUNDATION_EXPORT NSString * const CSSWebRequestServiceErrorDomain;
+
 @class CSSWebRequestTask;
 @class CSSWebRequestKernel;
 

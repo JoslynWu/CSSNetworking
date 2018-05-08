@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "CSSWebRequest.h"
 
-UIKIT_EXTERN const NSInteger CSSRequestInvalidID;
+FOUNDATION_EXPORT const NSInteger CSSRequestInvalidID;
 
 @interface CSSWebRequestTaskCollector : NSObject
 
