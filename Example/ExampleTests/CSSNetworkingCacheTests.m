@@ -15,7 +15,6 @@
 #import "CSSNetworking.h"
 #import "CSSCacheRequest.h"
 
-static NSUInteger cacheRequetCount = 0;
 #pragma mark  - TestCase
 @interface CSSCacheTests : XCTestCase
 
