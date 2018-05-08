@@ -19,6 +19,8 @@ static NSString * const CSSWebRequestServiceDataTask = @"dataTask";
 static NSString * const CSSWebRequestServiceUserInput = @"userInput";
 static NSString * const CSSWebRequestServiceError = @"error";
 
+static const NSInteger CSSWebRequestServiceAFNFailureNilErrorCode = -101;
+
 @interface CSSWebRequestService()
 
 @property (nonatomic, copy)CSSWebRequestTaskCollector* requestCollector;
@@ -83,7 +85,9 @@ static NSString * const CSSWebRequestServiceError = @"error";
     }
     
     if (!error) {
-        error = [NSError errorWithDomain:task.webRequest.urlForRequest code:-101 userInfo:nil];
+        error = [NSError errorWithDomain:task.webRequest.urlForRequest
+                                    code:CSSWebRequestServiceAFNFailureNilErrorCode
+                                userInfo:@{NSLocalizedDescriptionKey: @"[CSSNetworking] AFN failure with nil error."}];
     }
     
     NSDictionary *returnDics =@{CSSWebRequestServiceRespType: @(FAILURE),

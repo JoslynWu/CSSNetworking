@@ -42,7 +42,7 @@ typedef NS_ENUM(NSInteger, CSSProcessStyle) {
     Custom,         // 自定义
 };
 
-/** 转模型的方式 */
+/** 日志选项。manager 和 request 可以分别控制 */
 typedef NS_OPTIONS(NSUInteger, CSSNetworkingLogOptions) {
     Request     = 1 << 0,   // 请求log. 支持 CSSNetworkingManager 和 CSSWebRequest
     Response    = 1 << 1,   // 响应log. 支持 CSSNetworkingManager 和 CSSWebRequest
