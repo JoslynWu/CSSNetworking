@@ -89,9 +89,19 @@
 @property (nonatomic, assign, getter=isNeedEncrypt) BOOL needEncrypt;
 
 /**
- 提交的表单数据。
- - CSSWebRequestFormItem设置请看头文件`CSSWebRequestFormItem`
- - 如果不设置 name，则key 作为 multipartFormData 的name.
+ 提交的表单数据。数据组织形式有一下三种
+ 
+ - 方式1：<NSString *key: NSURL *url>
+ 此时fileURL=url; name="file"; filename=key; mimeType=通过扩展名获取;
+ 
+ - 方式2：<NSString *key: NSData *data>
+ 此时data=data; name="file"; filename=key; mimeType="image/jpeg";
+ 
+ - 方式3：<NSString *key: CSSWebRequestFormItem *item>
+ 3.1 如果item.data为NSURL或者NSSString。
+ 此时fileURL=item.data; name=item.name?:key; filename=item.filename; mimeType=item.mimeType;
+ 3.2 如果item.data为NSData。
+ 此时data=item.data; name=item.name?:key; filename=item.filename; mimeType=item.mimeType;
  */
 @property (nonatomic, strong) NSDictionary *formData;
 

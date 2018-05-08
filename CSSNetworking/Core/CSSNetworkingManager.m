@@ -102,11 +102,10 @@ static inline NSString *CSSContentTypeForPathExtension(NSString *extension) {
         for(NSString *key in [items allKeys]) {
             id val = [items objectForKey:key];
             if ([val isKindOfClass:[NSURL class]]) {
-                //通过url方式获取文件内容
-                [formData appendPartWithFileURL:val name:@"file" fileName:key mimeType:@"" error:nil];
+                NSString *mimeType = CSSContentTypeForPathExtension([val pathExtension]);
+                [formData appendPartWithFileURL:val name:@"file" fileName:key mimeType:mimeType error:nil];
             } else if ([val isKindOfClass:[NSData class]]) {
-                NSData * data = [items objectForKey:key];
-                [formData appendPartWithFileData:data name:@"file" fileName:key mimeType:@"image/jpeg"];
+                [formData appendPartWithFileData:val name:@"file" fileName:key mimeType:@"image/jpeg"];
             } else if ([val isKindOfClass:[CSSWebRequestFormItem class]]) {
                 CSSWebRequestFormItem *item = (CSSWebRequestFormItem *)val;
                 id data = item.data;
