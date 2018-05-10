@@ -190,15 +190,15 @@ NSString * const CSSWebRequestServiceErrorDomain = @"com.cssnetworking.error";
     }
     
     if (task.webRequest.processStyle == YYModel) {
-        NSString *methodString = @"yy_modelWithJSON:";
-        NSAssert([task.webRequest.responseDataClass respondsToSelector:NSSelectorFromString(methodString)], @"plase import YYModel");
-        return [self modelToJsonWithMethod:methodString response:resp];
+        SEL toModelSEL = NSSelectorFromString(@"yy_modelWithJSON:");
+        NSAssert([task.webRequest.responseDataClass respondsToSelector:toModelSEL], @"plase import YYModel");
+        return [self jsonToModelWithSelector:toModelSEL response:resp];
     }
     
     if (task.webRequest.processStyle == MJExtension) {
-        NSString *methodString = @"mj_objectWithKeyValues:";
-        NSAssert([task.webRequest.responseDataClass respondsToSelector:NSSelectorFromString(methodString)], @"plase import MJExtension");
-        return [self modelToJsonWithMethod:methodString response:resp];
+        SEL toModelSEL = NSSelectorFromString(@"mj_objectWithKeyValues:");
+        NSAssert([task.webRequest.responseDataClass respondsToSelector:toModelSEL], @"plase import MJExtension");
+        return [self jsonToModelWithSelector:toModelSEL response:resp];
     }
     
     if (task.webRequest.processStyle == Custom) {
@@ -208,8 +208,7 @@ NSString * const CSSWebRequestServiceErrorDomain = @"com.cssnetworking.error";
     return nil;
 }
 
-- (CSSWebResponseData *)modelToJsonWithMethod:(NSString *)methodString response:(CSSWebResponse *)resp {
-    SEL selector = NSSelectorFromString(methodString);
+- (CSSWebResponseData *)jsonToModelWithSelector:(SEL)selector response:(CSSWebResponse *)resp {
     IMP imp = [NSObject methodForSelector:selector];
     CSSWebResponseData *(*jsonToModelIMP)(id, SEL, id) = (void *)imp;
     Class cls = resp.task.webRequest.responseDataClass;
