@@ -1,4 +1,4 @@
-# CSPrettyPrinted
+# CSSPrettyPrinted
 
 你是否需要一种log，
 
@@ -46,7 +46,7 @@
 .   .   .   .   ]
 .   .   .   .   date = 2018-02-05 06:53:27 +0000
 .   .   .   }
-.   .   .   obj = <CSSimpleModel: 0x604000246ff0>
+.   .   .   obj = <CSSSimpleModel: 0x604000246ff0>
 .   .   }
 .   ]
 .   name = "aaa",
@@ -55,13 +55,20 @@
 }
 ```
 
+## 功能
+
+- 支持中文打印
+- 带缩进标记
+- `po`命令默认支持
+
+
 ## 使用
 
 **代码中:**
-导入头文件，然后使用`cs_debugSting`即可。
+导入头文件，然后使用`css_debugSting`即可。
 
 ```Objective-C
-instance.cs_debugSting;
+instance.css_debugSting;
 ```
 
 **控制台：**
@@ -70,38 +77,35 @@ instance.cs_debugSting;
 po instance
 ```
 
-注意：`instance` 是 `NSDictionary` 、 `NSArray` 、 `NSSet` 的实例。
-
 
 ## 引入
 
 方式一、 直接将Sources文件夹下文件添加（拖入）到项目中
 
 ```Objective-C
-CSPrettyPrinted.h
-CSPrettyPrinted.m
+CSSPrettyPrinted.h
+CSSPrettyPrinted.m
 ```
 
 方式二、 CocoaPods
 
 ```Objective-C
-pod 'CSPrettyPrinted'
+pod 'CSSPrettyPrinted'
 ```
+
+## 说明
+
+- 如果使用了`YYModel`、`MJExtension`或者`CSSModel`，普通对象同样被支持。
+- 如果没有使用者三种转模型，那么可以通过`css_customToJsonObjectSelector`指定自定义的方式。
 
 ## 其它
 
-一、如果需要在使用`%@`时打印这样的格式，可以在对应的分类中添加如下代码：
+- 如果需要在使用`%@`时打印这样的格式，可以添加如下代码：
+`NSDictionary`、`NSArray`和`NSSet`需要添加到对应的分类中
 
 ```Objective-C
-- (NSString *)descriptionWithLocale:(id)locale indent:(NSUInteger)level {
-    return [NSString stringWithFormat:@"\n%@\n%@", [super description], self.cs_debugSting];
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p>\n%@",NSStringFromClass([self class]), self, self.css_debugSting];
 }
 ```
 
-二、如果你想让所有的对象都可以使用这样打印。那么这里有一个建议：
-
-步骤：
-
-1、使用现在项目中的转模型工具，将对象转为`NSDictionary`（或者`NSArray`）。
-
-2、在`NSObject`的分类中添加类似的方法实现。

@@ -8,6 +8,7 @@
 
 #import "CSSWebRequest.h"
 #import <CSSModel/CSSModel.h>
+#import <CSSPrettyPrinted/CSSPrettyPrinted.h>
 #import "CSSWebRequestService.h"
 #import "CSSNetworkingDefine.h"
 #import "CSSNetworkingManager+Private.h"
@@ -80,7 +81,7 @@
 
 - (NSDictionary *)parameters {
     if(self.requestData) {
-        _parameters = [self.requestData css_modelToDictionary];
+        _parameters = (NSDictionary *)[self.requestData css_JSONObject];
     }
     return _parameters;
 }

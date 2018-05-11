@@ -48,15 +48,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray *)css_modelsWithArray:(NSArray *)array;
 
 /**
- Model 转 NSDictionary
+ Model 转 NSDictionary 、NSArray or nil
  */
-@property (nonatomic, strong, readonly) NSDictionary<NSString *, id> *css_modelToDictionary;
-
-/**
- 一个便于Debug的控制台打印。
- - 更多：https://github.com/JoslynWu/CSSPrettyPrinted
- */
-@property (nonatomic, strong, readonly) NSString *css_debugSting;
+@property (nonatomic, strong, readonly) NSObject *css_JSONObject;
 
 @end
 NS_ASSUME_NONNULL_END

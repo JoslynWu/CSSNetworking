@@ -10,13 +10,24 @@
 
 #import "CSSPrettyPrinted.h"
 
-@implementation NSObject (CSSPrettyPrinted)
+static void *kCSSPrettyPrintedCustomToJsonObjectSelector = nil;
 
-+ (NSString *)_css_toStringForSequence:(NSObject *)data {
-    return [self _css_stringForSequence:data indentLevel:1 wrap:YES];
+FOUNDATION_STATIC_INLINE NSSet<NSString *> *_css_toJsonObjectMethod() {
+    return [[NSSet alloc] initWithObjects:
+            @"css_JSONObject",          // CSSModel
+            @"yy_modelToJSONObject",    // YYModel
+            @"mj_JSONObject",           // MJExtension
+            nil];
 }
 
+@implementation NSObject (CSSPrettyPrinted)
+
+@dynamic css_customToJsonObjectSelector;
+
 + (NSString *)_css_stringForSequence:(NSObject *)data indentLevel:(NSInteger)level wrap:(BOOL)wrap {
+    if (!data) {
+        return @"";
+    }
     NSString *endSymbol = @"";
     NSArray *sequence;
     NSString *startSymbol = @"";
@@ -33,7 +44,7 @@
         endSymbol = @"}";
         sequence = ((NSDictionary *)data).allValues;
     } else {
-        return nil;
+        return [NSString stringWithFormat:@"<%@: %p>",NSStringFromClass([self class]), self];
     }
     NSString *indent = [self _css_placeholder:@" " tag:@"." base:4 repeat:level level:level];
     NSString *endIndent = [self _css_placeholder:@" " tag:@"." base:4 repeat:level - 1 level:level - 1];
@@ -101,48 +112,76 @@
     return result;
 }
 
-- (NSString *)_css_debugDescription {
-    return [NSString stringWithFormat:@"<%@: %p>\n%@",NSStringFromClass([self class]), self, [NSObject _css_toStringForSequence:self]];
++ (NSString *)_css_toStringForSequence:(NSObject *)data {
+    return [self _css_stringForSequence:data indentLevel:1 wrap:YES];
 }
 
-@end
+- (id)_objectToDictWithSelector:(SEL)selector {
+    if (![self respondsToSelector:selector]) {
+        return nil;
+    }
+    IMP imp = [NSObject methodForSelector:selector];
+    id (*toDictIMP)(id, SEL) = (void *)imp;
+    return toDictIMP(self, selector);
+}
 
++ (SEL)css_customToJsonObjectSelector {
+    return kCSSPrettyPrintedCustomToJsonObjectSelector;
+}
 
-@implementation NSDictionary (CSSPrettyPrinted)
++ (void)setCss_customToJsonObjectSelector:(SEL)css_customToJsonObjectSelector {
+    kCSSPrettyPrintedCustomToJsonObjectSelector = css_customToJsonObjectSelector;
+}
+
+#pragma mark - ********************* public *********************
+#ifdef DEBUG
+// auto call with po command in debug
+- (NSString *)debugDescription {
+    return [NSString stringWithFormat:@"<%@: %p>\n%@",NSStringFromClass([self class]), self, self.css_debugSting];
+}
+#endif
 
 - (NSString *)css_debugSting {
-    return [NSObject _css_toStringForSequence:self];
-}
-
-- (NSString *)debugDescription {
-    return [self _css_debugDescription];
+    if (!self) {
+        return @"";
+    }
+    if ([self isKindOfClass:[NSDictionary class]] || [self isKindOfClass:[NSArray class]] || [self isKindOfClass:[NSSet class]]) {
+        return [NSObject _css_toStringForSequence:self];
+    }
+    
+    __block SEL selector = nil;
+    if ([self.class css_customToJsonObjectSelector]) {
+        selector = [self.class css_customToJsonObjectSelector];
+    } else {
+        [_css_toJsonObjectMethod() enumerateObjectsUsingBlock:^(NSString * _Nonnull method, BOOL * _Nonnull stop) {
+            if ([self respondsToSelector:NSSelectorFromString(method)]) {
+                selector = NSSelectorFromString(method);
+                *stop = YES;
+            }
+        }];
+    }
+    
+    if (!selector) {
+        return [NSString stringWithFormat:@"<%@: %p>",NSStringFromClass([self class]), self];
+    }
+    
+    id jsonObj = [self _objectToDictWithSelector:selector];
+    if (!jsonObj) {
+        return [NSString stringWithFormat:@"<%@: %p>",NSStringFromClass([self class]), self];
+    }
+    return [NSObject _css_toStringForSequence:jsonObj];
 }
 
 @end
 
 
+#ifdef DEBUG
 @implementation NSArray (CSSPrettyPrinted)
 
-- (NSString *)css_debugSting {
-    return [NSObject _css_toStringForSequence:self];
-}
-
 - (NSString *)debugDescription {
-    return [self _css_debugDescription];
+    return [super debugDescription];
 }
 
 @end
-
-
-@implementation NSSet (CSSPrettyPrinted)
-
-- (NSString *)css_debugSting {
-    return [NSObject _css_toStringForSequence:self];
-}
-
-- (NSString *)debugDescription {
-    return [self _css_debugDescription];
-}
-
-@end
+#endif
 

@@ -11,7 +11,6 @@
 #endif
 
 #import "CSSModel.h"
-#import "NSObject+CSSModel.h"
 
 FOUNDATION_EXPORT double CSSModelVersionNumber;
 FOUNDATION_EXPORT const unsigned char CSSModelVersionString[];

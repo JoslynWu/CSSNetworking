@@ -11,6 +11,7 @@
 #import "CSSWebURLCache.h"
 #import "CSSWebRequestTaskCollector.h"
 #import <CSSModel/CSSModel.h>
+#import <CSSPrettyPrinted/CSSPrettyPrinted.h>
 #import "CSSNetworkingManager+Private.h"
 
 static NSString * const CSSWebRequestServiceRespType = @"respType";

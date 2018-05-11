@@ -16,7 +16,8 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |ss|
     ss.dependency 'AFNetworking', '~> 3.1.0'
-    ss.dependency 'CSSModel', '~> 0.0.3'
+    ss.dependency 'CSSModel', '~> 0.0.5'
+    ss.dependency 'CSSPrettyPrinted', '~> 0.1.2'
     ss.public_header_files = 'CSSNetworking/Core/*.{h}'
     ss.source_files = 'CSSNetworking/Core/*.{h,m}'
   end

@@ -6,8 +6,7 @@
 //  Copyright © 2018年 joslyn. All rights reserved.
 //
 
-#import "NSObject+CSSModel.h"
-#import <CSSPrettyPrinted/CSSPrettyPrinted.h>
+#import "CSSModel.h"
 #import <objc/runtime.h>
 
 static NSString *const CSSModelPropertyClassKey = @"class";
@@ -79,20 +78,15 @@ static NSString *const CSSModelPropertySubClassKey = @"subclass";
     return object;
 }
 
-- (NSString *)css_debugSting {
-    if ([self isKindOfClass:[NSDictionary class]] || [self isKindOfClass:[NSArray class]] || [self isKindOfClass:[NSSet class]]) {
-        return self.css_debugSting;
+- (NSObject *)css_JSONObject {
+    NSMutableArray *mArr = [NSMutableArray array];
+    if ([self isKindOfClass:[NSArray class]]) {
+        for (NSObject *item in (NSArray *)self) {
+            [mArr addObject:item.css_JSONObject ?: item];
+        }
+        return mArr.copy;
     }
     
-    NSDictionary *dict = [self css_modelToDictionary];
-    if (dict.count > 0) {
-        return dict.css_debugSting;
-    }
-
-    return nil;
-}
-
-- (NSDictionary *)css_modelToDictionary {
     NSDictionary *tempDict = [self.class _css_dictionaryWithJSON:self];
     if (tempDict) {
         return tempDict;
@@ -114,11 +108,11 @@ static NSString *const CSSModelPropertySubClassKey = @"subclass";
             } else if ([clz isSubclassOfClass:[NSArray class]]) {
                 NSMutableArray *mArr = [NSMutableArray arrayWithCapacity:[value count]];
                 for (id subObj in value) {
-                    [mArr addObject:[subObj css_modelToDictionary]];
+                    [mArr addObject:[subObj css_JSONObject]];
                 }
                 dict[key] = mArr;
             } else {
-                if (value) dict[key] = [value css_modelToDictionary];
+                if (value) dict[key] = [value css_JSONObject];
             }
         }
     }
@@ -126,8 +120,8 @@ static NSString *const CSSModelPropertySubClassKey = @"subclass";
 }
 
 - (instancetype)css_clone {
-    NSDictionary *tempDict = [self css_modelToDictionary];
-    NSData *data = [NSJSONSerialization dataWithJSONObject:tempDict options:kNilOptions error:nil];
+    NSObject *temp = [self css_JSONObject];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:temp options:kNilOptions error:nil];
     NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
     if (![dict isKindOfClass:[NSDictionary class]]) { dict = nil; }
     return [[self class] css_modelWithDictionary:dict];
