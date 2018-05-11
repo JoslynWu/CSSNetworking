@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "CSSNetworking"
-  s.version      = "0.0.6"
+  s.version      = "0.0.7"
   s.summary      = "一个灵活的网络框架（基于AFNetworking）。"
   s.license      = { :type => 'MIT License', :file => 'LICENSE' }
   s.authors      = { 'Joslyn' => 'cs_joslyn@foxmail.com' }
