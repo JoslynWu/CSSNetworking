@@ -152,6 +152,8 @@ NSString * const CSSWebRequestServiceErrorDomain = @"com.cssnetworking.error";
             !weakTask.webRequest.failedBlock ?: weakTask.webRequest.failedBlock(resp);
         }
         if (respType != CACHE) {
+            weakTask.webRequest.executing = NO;
+            weakTask.webRequest.finished = YES;
             [self _logWithTask:weakTask responseData:responseData];
         }
     };

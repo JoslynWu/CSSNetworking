@@ -11,12 +11,14 @@
 #import "CSSWebResponse.h"
 #import "CSSWebRequestFormItem.h"
 #import "CSSNetworkingManager.h"
+#import <CSSOperation/CSSOperation.h>
+#import <CSSOperation/NSOperation+CSSOperation.h>
 
 @interface CSSWebRequestData : NSObject
 @end
 
 
-@interface CSSWebRequest : NSObject
+@interface CSSWebRequest : CSSOperation
 
 #pragma mark - ********************* 构建请求 *********************
 /**

@@ -42,6 +42,17 @@
     return self;
 }
 
+#pragma mark - override
+- (CSSOperationType)operationType {
+    return kCSSOperationTypeConcurrent;
+}
+
+- (CSSOperationBlock)blockOnCurrentThread {
+    return ^(CSSOperation *make){
+        [((CSSWebRequest *)make) sendRequest];
+    };
+}
+
 #pragma mark  -  public
 - (NSString *)sign {
     return _sign ?: @"";
