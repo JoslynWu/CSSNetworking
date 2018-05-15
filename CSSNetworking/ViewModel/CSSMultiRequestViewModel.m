@@ -67,11 +67,18 @@
     CSSOperation *operation = [[CSSOperation alloc] initWithOperationType:kCSSOperationTypeSerial];
     operation.queues = self.operationQueues;
     __weak typeof(self) weakSelf = self;
-    operation.blockOnCurrentThread = ^(CSSOperation *make) {
-        weakSelf.currentOperation = make;
+    operation.blockOnCurrentThread = ^(CSSOperation *maker) {
+        NSLog(@"---->%@", @"_sendAllRequest");
+        weakSelf.currentOperation = maker;
         [weakSelf _sendAllRequest];
     };
     [operation asyncStart];
+    operation.completionBlock = ^{
+        NSLog(@"---->%@", [NSThread currentThread]);
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            NSLog(@"---->%@,%@", @"serialQueue main queue", [NSThread currentThread]);
+        }];
+    };
     return operation;
 }
 
@@ -89,8 +96,8 @@
     CSSOperation *operation = [[CSSOperation alloc] initWithOperationType:kCSSOperationTypeSerial];
     operation.queues = self.operationQueues;
     __weak typeof(self) weakSelf = self;
-    operation.blockOnCurrentThread = ^(CSSOperation *make) {
-        weakSelf.currentOperation = make;
+    operation.blockOnCurrentThread = ^(CSSOperation *maker) {
+        weakSelf.currentOperation = maker;
         [weakSelf _sendRequestWithIds:mArr.copy];
     };
     [operation asyncStart];
@@ -158,6 +165,7 @@
 }
 
 - (void)_endSingleRefresh{
+    NSLog(@"--->%s",__func__);
     for (CSSMultiRequestInfo *model in self.requestInfo.allValues) {
         if (!model.isRequestCompleteFlag) {
             if (!model.isIndependent) {

@@ -59,7 +59,7 @@ static dispatch_queue_t _CSSOperationDispatchManagerSerialQueue(void) {
     [NSOperationQueue asyncStartOperations:self, nil];
 }
 
-- (void)dependencyOperations:(NSOperation *)newOperation, ... {
+- (void)dependencyOperations:(__kindof NSOperation *)newOperation, ... {
     NSMutableArray *operations = [NSMutableArray array];
     [operations addObject:newOperation];
     
@@ -86,7 +86,7 @@ static dispatch_queue_t _CSSOperationDispatchManagerSerialQueue(void) {
 @implementation NSOperationQueue (CSSOperationDispatchManager)
 
 #pragma mark -Sync
-+ (void)syncStartOperations:(NSOperation *)newOperation, ... {
++ (void)syncStartOperations:(__kindof NSOperation *)newOperation, ... {
     if (newOperation) {
         [newOperation start];
         
@@ -104,7 +104,7 @@ static dispatch_queue_t _CSSOperationDispatchManagerSerialQueue(void) {
 }
 
 #pragma mark - Async
-+ (void)asyncStartOperations:(NSOperation *)newOperation, ... {
++ (void)asyncStartOperations:(__kindof NSOperation *)newOperation, ... {
     if (newOperation) {
         NSMutableArray *operations = [NSMutableArray array];
         [operations addObject:newOperation];
@@ -121,7 +121,6 @@ static dispatch_queue_t _CSSOperationDispatchManagerSerialQueue(void) {
         va_end(argumentList);
         
         dispatch_async(_CSSOperationDispatchManagerSerialQueue(), ^{
-            
             for (NSOperation *operation in operations) {
                 [operation.class _asyncStartOperation:operation];
             }
