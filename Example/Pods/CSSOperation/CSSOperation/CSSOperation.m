@@ -41,6 +41,10 @@ static NSOperationQueue *_CSSOperationManagerGlobalQueue(CSSOperationType type) 
     return [self initWithOperationType:kCSSOperationTypeConcurrent];
 }
 
++ (instancetype)operationWithType:(CSSOperationType)type {
+    return [[self alloc] initWithOperationType:type];
+}
+
 - (instancetype)initWithOperationType:(CSSOperationType)type {
     self = [super init];
     if (!self) {
@@ -85,8 +89,9 @@ static NSOperationQueue *_CSSOperationManagerGlobalQueue(CSSOperationType type) 
 
 #pragma mark - Pubilc Methods
 - (void)start {
-    
+    self.executing = YES;
     if ([self isCancelled]) {
+        self.executing = NO;
         self.finished = YES;
         return;
     }
@@ -108,8 +113,8 @@ static NSOperationQueue *_CSSOperationManagerGlobalQueue(CSSOperationType type) 
 
 - (void)cancel {
     [super cancel];
-    self.finished = YES;
     self.executing = NO;
+    self.finished = YES;
 }
 
 #pragma mark - Set

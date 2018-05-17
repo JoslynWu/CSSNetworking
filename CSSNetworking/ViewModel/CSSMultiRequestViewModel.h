@@ -28,6 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** 响应对象 */
 @property (nonatomic, strong) CSSWebResponseData *respData;
 
+/** 请求操作 */
+@property (nonatomic, strong) CSSOperation *operation;
+
 /**
  是否为例外。
  - 例外是相对于`sendAllRequest`而言。
@@ -117,6 +120,7 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  @return 操作组。可以指定其优先级等
  */
 - (CSSOperation *)sendRequestWithIds:(NSInteger)rid, ...;
+- (CSSOperation *)sendRequestWithIdArray:(NSArray<NSNumber *> *)rids;
 
 /**
  发送指定请求

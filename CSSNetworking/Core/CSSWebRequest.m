@@ -8,7 +8,6 @@
 
 #import "CSSWebRequest.h"
 #import <CSSModel/CSSModel.h>
-#import <CSSPrettyPrinted/CSSPrettyPrinted.h>
 #import "CSSWebRequestService.h"
 #import "CSSNetworkingDefine.h"
 #import "CSSNetworkingManager+Private.h"
@@ -40,17 +39,6 @@
     _responseDataClass = [CSSWebResponseData class];
     _logOptions = None;
     return self;
-}
-
-#pragma mark - override
-- (CSSOperationType)operationType {
-    return kCSSOperationTypeConcurrent;
-}
-
-- (CSSOperationBlock)blockOnMainThread {
-    return ^(CSSWebRequest *make){
-        [make sendRequest];
-    };
 }
 
 #pragma mark  -  public
@@ -145,7 +133,7 @@
                  NSStringFromClass([self class]),
                  task.tid,
                  task.dataTask.originalRequest.URL.absoluteString,
-                 task.dataTask.originalRequest.HTTPBody.css_debugSting);
+                 task.webRequest.parameters);
 }
 
 @end

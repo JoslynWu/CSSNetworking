@@ -24,11 +24,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CSSOperation : NSOperation
 
 /**
- 便捷构造器
+ 指定构造器
  - 你可以使用默认构造创建实例，然后再修改`operationType`
  - 默认构造器(-init)的`operationType`默认为`kCSSOperationTypeConcurrent`
  */
 - (instancetype)initWithOperationType:(CSSOperationType)type NS_DESIGNATED_INITIALIZER;
+
+/** 便捷构造器 */
++ (instancetype)operationWithType:(CSSOperationType)type;
 
 /** 操作是否在执行中 */
 @property (assign, nonatomic, getter=isExecuting) BOOL executing;

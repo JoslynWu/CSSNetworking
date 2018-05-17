@@ -11,7 +11,6 @@
 #import "CSSWebURLCache.h"
 #import "CSSWebRequestTaskCollector.h"
 #import <CSSModel/CSSModel.h>
-#import <CSSPrettyPrinted/CSSPrettyPrinted.h>
 #import "CSSNetworkingManager+Private.h"
 
 static NSString * const CSSWebRequestServiceRespType = @"respType";
@@ -152,8 +151,6 @@ NSString * const CSSWebRequestServiceErrorDomain = @"com.cssnetworking.error";
             !weakTask.webRequest.failedBlock ?: weakTask.webRequest.failedBlock(resp);
         }
         if (respType != CACHE) {
-            weakTask.webRequest.executing = NO;
-            weakTask.webRequest.finished = YES;
             [self _logWithTask:weakTask responseData:responseData];
         }
     };
@@ -244,7 +241,7 @@ NSString * const CSSWebRequestServiceErrorDomain = @"com.cssnetworking.error";
                  task.tid,
                  task.dataTask.originalRequest.URL.absoluteString,
                  [[NSString alloc] initWithData:task.dataTask.originalRequest.HTTPBody encoding:NSUTF8StringEncoding],
-                 responseData.css_debugSting);
+                 responseData);
 }
 
 @end

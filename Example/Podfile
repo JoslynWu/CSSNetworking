@@ -10,7 +10,7 @@ target 'Example' do
   pod 'CSSModel', '~> 0.0.3'
   pod 'MJExtension', '~> 3.0.13'
   pod 'CSSOperation', :git => 'https://github.com/JoslynWu/CSSOperation.git'
-  pod 'CSSPrettyPrinted', '~> 0.1.1'
+  # pod 'CSSPrettyPrinted', '~> 0.1.1'
 
   target 'ExampleTests' do
     inherit! :search_paths

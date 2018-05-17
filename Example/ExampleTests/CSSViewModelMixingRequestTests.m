@@ -64,6 +64,14 @@ static NSInteger operationCompleteCount = 0;
                 XCTAssertTrue([rids containsObject:@(requestIdTwo)]);
                 XCTAssertTrue([rids containsObject:@(requestIdThree)]);
                 XCTAssertTrue(requestCount == (3 + 1 + 3));
+            } else if (operationCompleteCount == 4) {
+                XCTAssertTrue([rids containsObject:@(requestIdTwo)]);
+                XCTAssertTrue([rids containsObject:@(requestIdThree)]);
+                XCTAssertTrue(requestCount == (3 + 1 + 3 + 2));
+            } else if (operationCompleteCount == 5) {
+                XCTAssertTrue([rids containsObject:@(requestIdOne)]);
+                XCTAssertTrue([rids containsObject:@(requestIdTwo)]);
+                XCTAssertTrue(requestCount == (3 + 1 + 3 + 2 + 2));
                 CSS_POST_NOTIF
             }
         };
@@ -83,13 +91,18 @@ static NSInteger operationCompleteCount = 0;
     CSSOperation *operation1 =  [self.vm sendAllRequest];
     CSSOperation *operation2 = [self.vm sendSingleRequestWithId:requestIdThree];
     CSSOperation *operation3 = [self.vm sendAllRequest];
+    CSSOperation *operation4 = [self.vm sendRequestWithIdArray:@[@(requestIdThree), @(requestIdTwo)]];
+    CSSOperation *operation5 = [self.vm sendRequestWithIds:requestIdOne, requestIdTwo, nil];
 //    operation2.queuePriority = NSOperationQueuePriorityVeryHigh;
     XCTAssertNotEqual(operation1, operation2);
     XCTAssertNotEqual(operation1, operation3);
     XCTAssertNotEqual(operation3, operation2);
+    XCTAssertNotEqual(operation3, operation4);
+    XCTAssertNotEqual(operation3, operation5);
+    XCTAssertNotEqual(operation4, operation5);
     
     CSS_WAIT
-    XCTAssertTrue(operationCompleteCount == 3);
+    XCTAssertTrue(operationCompleteCount == 5);
 }
 
 #pragma mark - ********************* action *********************
