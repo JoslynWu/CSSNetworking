@@ -47,9 +47,9 @@
     return kCSSOperationTypeConcurrent;
 }
 
-- (CSSOperationBlock)blockOnCurrentThread {
-    return ^(CSSOperation *make){
-        [((CSSWebRequest *)make) sendRequest];
+- (CSSOperationBlock)blockOnMainThread {
+    return ^(CSSWebRequest *make){
+        [make sendRequest];
     };
 }
 

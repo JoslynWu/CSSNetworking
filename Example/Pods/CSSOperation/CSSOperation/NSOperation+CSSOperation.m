@@ -22,14 +22,14 @@ static dispatch_queue_t _CSSOperationDispatchManagerSerialQueue(void) {
 #pragma mark - ********************* NSOperationQueue+_CSSOperationManagerTemplate *********************
 @interface NSOperation (_CSSOperationManagerTemplate)
 
-+ (void)_asyncStartOperation:(NSOperation *)newOperation;
++ (void)_asyncStartOperation:(__kindof NSOperation *)newOperation;
 
 @end
 
 @implementation NSOperation (_CSSOperationManagerTemplate)
 
 #pragma mark - Template Method
-+ (void)_asyncStartOperation:(NSOperation *)newOperation {
++ (void)_asyncStartOperation:(__kindof NSOperation *)newOperation {
     // 检测newOperation是否已被处理
     if (![self _operationDidHandle:newOperation]) {
         NSOperationQueue *queue = [self _queueForOperation:newOperation];
@@ -37,11 +37,11 @@ static dispatch_queue_t _CSSOperationDispatchManagerSerialQueue(void) {
     }
 }
 
-+ (BOOL)_operationDidHandle:(NSOperation *)newOperation {
++ (BOOL)_operationDidHandle:(__kindof NSOperation *)newOperation {
     return NO;
 }
 
-+ (NSOperationQueue *)_queueForOperation:(NSOperation *)newOperation {
++ (__kindof NSOperationQueue *)_queueForOperation:(__kindof NSOperation *)newOperation {
     return nil;
 }
 
@@ -79,6 +79,12 @@ static dispatch_queue_t _CSSOperationDispatchManagerSerialQueue(void) {
     }
 }
 
+- (void)dependencyOperationArray:(NSArray<__kindof NSOperation *> *)operations {
+    [operations enumerateObjectsUsingBlock:^(__kindof NSOperation * _Nonnull operation, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self dependencyOperations:operation, nil];
+    }];
+}
+
 @end
 
 
@@ -101,6 +107,12 @@ static dispatch_queue_t _CSSOperationDispatchManagerSerialQueue(void) {
         
         va_end(argumentList);
     }
+}
+
++ (void)syncStartOperationArray:(NSArray<__kindof NSOperation *> *)operations {
+    [operations enumerateObjectsUsingBlock:^(__kindof NSOperation * _Nonnull operation, NSUInteger idx, BOOL * _Nonnull stop) {
+        [operation syncStart];
+    }];
 }
 
 #pragma mark - Async
@@ -126,6 +138,12 @@ static dispatch_queue_t _CSSOperationDispatchManagerSerialQueue(void) {
             }
         });
     }
+}
+
++ (void)asyncStartOperationArray:(NSArray<__kindof NSOperation *> *)operations {
+    [operations enumerateObjectsUsingBlock:^(__kindof NSOperation * _Nonnull operation, NSUInteger idx, BOOL * _Nonnull stop) {
+        [operation asyncStart];
+    }];
 }
 
 @end

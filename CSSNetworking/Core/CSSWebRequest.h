@@ -12,7 +12,6 @@
 #import "CSSWebRequestFormItem.h"
 #import "CSSNetworkingManager.h"
 #import <CSSOperation/CSSOperation.h>
-#import <CSSOperation/NSOperation+CSSOperation.h>
 
 @interface CSSWebRequestData : NSObject
 @end

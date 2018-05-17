@@ -8,7 +8,6 @@
 
 #import "CSSMultiRequestViewModel.h"
 #import "CSSNetworkingManager+Private.h"
-#import <CSSOperation/NSOperation+CSSOperation.h>
 
 @interface CSSMultiRequestInfo ()
 @property (nonatomic, assign, readwrite, getter=isRequestCompleteFlag) BOOL requestCompleteFlag;

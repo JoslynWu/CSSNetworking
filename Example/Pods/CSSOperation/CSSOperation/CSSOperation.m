@@ -51,17 +51,15 @@ static NSOperationQueue *_CSSOperationManagerGlobalQueue(CSSOperationType type) 
 }
 
 #pragma mark - Template Sub Methods
-+ (NSOperationQueue *)_queueForOperation:(NSOperation *)newOperation {
++ (NSOperationQueue *)_queueForOperation:(__kindof NSOperation *)newOperation {
     
     CSSOperation *tempOperation = (CSSOperation *)newOperation;
     CSSOperationType operationType = tempOperation.operationType ?: kCSSOperationTypeConcurrent;
     NSOperationQueue *queue = nil;
-    if (tempOperation.queues.count && [tempOperation.queues.allKeys containsObject:operationType]) {
-        if ([tempOperation.queues[operationType] isKindOfClass:[NSOperationQueue class]]) {
-            queue = tempOperation.queues[operationType];
-        } else {
-            queue = _CSSOperationManagerGlobalQueue(operationType);
-        }
+    if (tempOperation.queues.count &&
+        [tempOperation.queues.allKeys containsObject:operationType] &&
+        [tempOperation.queues[operationType] isKindOfClass:[NSOperationQueue class]]){
+        queue = tempOperation.queues[operationType];
     } else {
         queue = _CSSOperationManagerGlobalQueue(operationType);
     }
@@ -116,15 +114,15 @@ static NSOperationQueue *_CSSOperationManagerGlobalQueue(CSSOperationType type) 
 
 #pragma mark - Set
 - (void)setFinished:(BOOL)finished {
-    [self willChangeValueForKey:@"isFinished"];
+    [self willChangeValueForKey:NSStringFromSelector(@selector(isFinished))];
     _finished = finished;
-    [self didChangeValueForKey:@"isFinished"];
+    [self didChangeValueForKey:NSStringFromSelector(@selector(isFinished))];
 }
 
 - (void)setExecuting:(BOOL)executing {
-    [self willChangeValueForKey:@"isExecuting"];
+    [self willChangeValueForKey:NSStringFromSelector(@selector(isExecuting))];
     _executing = executing;
-    [self didChangeValueForKey:@"isExecuting"];
+    [self didChangeValueForKey:NSStringFromSelector(@selector(isExecuting))];
 }
 
 @end

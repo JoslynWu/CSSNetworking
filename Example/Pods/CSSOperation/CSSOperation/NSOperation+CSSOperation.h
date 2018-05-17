@@ -24,6 +24,7 @@
 
 /** 当前操作依赖其它操作 */
 - (void)dependencyOperations:(__kindof NSOperation *)newOperation, ...;
+- (void)dependencyOperationArray:(NSArray<__kindof NSOperation *> *)operations;
 
 @end
 
@@ -36,12 +37,15 @@
  - 不加入队列，直接执行
  */
 + (void)syncStartOperations:(__kindof NSOperation *)newOperation, ...;
++ (void)syncStartOperationArray:(NSArray<__kindof NSOperation *> *)operations;
 
 /**
  异步执行Operation
  - 队列类型由操作具体指定（CSSOperation的operationType）
+ - 队列创建后全局可用
  */
 + (void)asyncStartOperations:(__kindof NSOperation *)newOperation, ...;
++ (void)asyncStartOperationArray:(NSArray<__kindof NSOperation *> *)operations;
 
 @end
 
