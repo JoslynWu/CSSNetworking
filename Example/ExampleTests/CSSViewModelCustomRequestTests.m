@@ -135,7 +135,7 @@ static NSInteger requestCount = 0;
     }
 }
 
-- (void)viewModel:(vmCls *)vm failed:(CSSWebResponse *)resp requestId:(NSInteger)rid {
+- (void)viewModel:(vmCls *)vm failure:(CSSWebResponse *)resp requestId:(NSInteger)rid {
     XCTAssert(resp.respType == SUCCESS, @"请求成功，结果失败");
 }
 

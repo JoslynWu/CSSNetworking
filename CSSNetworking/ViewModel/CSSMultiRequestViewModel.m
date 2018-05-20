@@ -19,7 +19,6 @@
 
 @interface CSSMultiRequestViewModel ()
 
-@property (nonatomic, weak) id<CSSMultiRequestViewModelDelegate> delegate;
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, CSSMultiRequestInfo *> *requestInfo;
 @property (nonatomic, strong) CSSOperation *currentOperation;
 @property (nonatomic, strong) NSDictionary<CSSOperationType, NSOperationQueue *> *operationQueues;
@@ -66,9 +65,19 @@
     [self _buildRequestWithModel:requestInfo];
 }
 
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)otherRid success:(BOOL(^)(CSSWebResponse *))condition {
+    NSAssert1([self.requestInfo.allKeys containsObject:@(rid)], @"[CSSMultiRequestViewModel] contains one invalid rid %li", rid);
+
+    CSSRequestInfo *info = [self requestInfoWithId:rid];
+    // TODO J
+}
+
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)otherRid failure:(BOOL(^)(CSSWebResponse *))condition {
+    // TODO J
+}
+
 - (CSSOperation *)sendAllRequest {
-    CSSOperation *operation = [[CSSOperation alloc] initWithOperationType:kCSSOperationTypeSerial];
-    operation.queues = self.operationQueues;
+    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial queue:self.operationQueues];
     __weak typeof(self) weakSelf = self;
     operation.blockOnCurrentThread = ^(CSSOperation *maker) {
         weakSelf.currentOperation = maker;
@@ -89,8 +98,7 @@
     }
     va_end(argList);
     
-    CSSOperation *operation = [[CSSOperation alloc] initWithOperationType:kCSSOperationTypeSerial];
-    operation.queues = self.operationQueues;
+    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial queue:self.operationQueues];
     __weak typeof(self) weakSelf = self;
     operation.blockOnCurrentThread = ^(CSSOperation *maker) {
         weakSelf.currentOperation = maker;
@@ -101,8 +109,7 @@
 }
 
 - (CSSOperation *)sendRequestWithIdArray:(NSArray<NSNumber *> *)rids {
-    CSSOperation *operation = [[CSSOperation alloc] initWithOperationType:kCSSOperationTypeSerial];
-    operation.queues = self.operationQueues;
+    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial queue:self.operationQueues];
     __weak typeof(self) weakSelf = self;
     operation.blockOnCurrentThread = ^(CSSOperation *maker) {
         weakSelf.currentOperation = maker;
@@ -144,8 +151,7 @@
 }
 
 - (CSSOperation *)createOperationWithRequestInfo:(CSSMultiRequestInfo *)requestInfo {
-    CSSOperation *operation = [CSSOperation new];
-    operation.queues = self.operationQueues;
+    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeConcurrent queue:self.operationQueues];
     requestInfo.operation = operation;
     __weak CSSMultiRequestInfo *weakRequestInfo = requestInfo;
     operation.blockOnMainThread = ^(__kindof CSSOperation *maker) {
@@ -170,9 +176,8 @@
 }
 
 - (void)addCompleteOperationWithActiveRequests:(NSArray<CSSOperation *> *)operations {
-    CSSOperation *completeOperation = [CSSOperation new];
-    completeOperation.queues = self.operationQueues;
-    [completeOperation dependencyOperationArray:operations];
+    CSSOperation *completeOperation = [CSSOperation operationWithType:kCSSOperationTypeConcurrent queue:self.operationQueues];
+    [completeOperation addDependencyArray:operations];
     completeOperation.blockOnMainThread = ^(__kindof CSSOperation *maker) {
         [self _executeCompleteHandle];
         maker.executing = NO;
@@ -230,8 +235,8 @@
             [self.delegate viewModel:self success:resp requestId:rid];
         }
     } else {
-        if ([self.delegate respondsToSelector:@selector(viewModel:failed:requestId:)]) {
-            [self.delegate viewModel:self failed:resp requestId:rid];
+        if ([self.delegate respondsToSelector:@selector(viewModel:failure:requestId:)]) {
+            [self.delegate viewModel:self failure:resp requestId:rid];
         }
     }
     CSSOperation *operation = self.requestInfo[@(rid)].operation;

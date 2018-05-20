@@ -39,7 +39,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   CSSOperation:
-    :commit: 7f92cfd1aea5f38ef94ca26c95ea9cd277a34d4d
+    :commit: 83b53df8ee3882ddce489f903f2e56c8200f5bcc
     :git: https://github.com/JoslynWu/CSSOperation.git
 
 SPEC CHECKSUMS:

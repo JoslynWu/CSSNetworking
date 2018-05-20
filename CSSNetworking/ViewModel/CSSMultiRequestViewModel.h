@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** 响应对象 */
 @property (nonatomic, strong) CSSWebResponseData *respData;
 
-/** 请求操作 */
+/** 请求操作. 每次发送请求时，实例会被重新赋值 */
 @property (nonatomic, strong) CSSOperation *operation;
 
 /**
@@ -69,7 +69,7 @@ typedef CSSMultiRequestViewModel vmCls;
  失败时调用
  - 严格的失败。 即为严格成功的else
  */
-- (void)viewModel:(vmCls *)vm failed:(CSSWebResponse *)resp requestId:(NSInteger)rid;
+- (void)viewModel:(vmCls *)vm failure:(CSSWebResponse *)resp requestId:(NSInteger)rid;
 
 /**
  加载缓存时回调。
@@ -88,6 +88,7 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 
 @interface CSSMultiRequestViewModel : NSObject
 
+#pragma mark - init
 /**
  初始化方法
 
@@ -98,6 +99,10 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 - (instancetype)initWithDelegate:(nullable id<CSSMultiRequestViewModelDelegate>)delegate
                       addRequest:(nullable void(^)(vmCls *make))block NS_DESIGNATED_INITIALIZER;
 
+@property (nonatomic, weak) id<CSSMultiRequestViewModelDelegate> delegate;
+
+
+#pragma mark - config request
 /**
  添加请求
 
@@ -106,6 +111,11 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  */
 - (void)addRequestWithId:(NSInteger)rid config:(CSSMultiRequestConfigBlcok)configBlock;
 
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)otherRid success:(BOOL(^)(CSSWebResponse *))condition;
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)otherRid failure:(BOOL(^)(CSSWebResponse *))condition;
+
+
+#pragma mark - send request
 /**
  发送全部请求
 
@@ -121,21 +131,18 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  */
 - (CSSOperation *)sendRequestWithIds:(NSInteger)rid, ...;
 - (CSSOperation *)sendRequestWithIdArray:(NSArray<NSNumber *> *)rids;
-
-/**
- 发送指定请求
-
- @param rid 请求的ID
- @return 操作组。可以指定其优先级等
- */
 - (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid;
 
+
+#pragma mark - CSSRequestInfo operation
 /** 获取指定请求信息 */
 - (CSSRequestInfo *)requestInfoWithId:(NSInteger)rid;
 
 /** 移除指定请求 */
 - (void)removeRequestInfoWithId:(NSInteger)rid;
 
+
+#pragma mark - call-back
 /**
  一组请求结束时的回调。
  - 单个请求也可视为一组请求
