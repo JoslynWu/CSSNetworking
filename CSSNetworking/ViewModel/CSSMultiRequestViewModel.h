@@ -111,8 +111,8 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  */
 - (void)addRequestWithId:(NSInteger)rid config:(CSSMultiRequestConfigBlcok)configBlock;
 
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)otherRid success:(BOOL(^)(CSSWebResponse *))condition;
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)otherRid failure:(BOOL(^)(CSSWebResponse *))condition;
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid success:(BOOL(^)(CSSWebResponse *))condition;
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid failure:(BOOL(^)(CSSWebResponse *))condition;
 
 
 #pragma mark - send request
