@@ -157,15 +157,15 @@
             continue;
         }
         [self.activeRids addObject:rid];
-        CSSOperation *operation = [self createOperationWithRequestInfo:self.requestInfo[rid]];
+        CSSOperation *operation = [self _createOperationWithRequestInfo:self.requestInfo[rid]];
         [mArr addObject:operation];
         [operation asyncStart];
     }
     [self _addDependencyWithActiveRids:self.activeRids];
-    [self addCompleteOperationWithActiveRequests:mArr.copy];
+    [self _addCompleteOperationWithActiveRequests:mArr.copy];
 }
 
-- (CSSOperation *)createOperationWithRequestInfo:(CSSMultiRequestInfo *)requestInfo {
+- (CSSOperation *)_createOperationWithRequestInfo:(CSSMultiRequestInfo *)requestInfo {
     CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeConcurrent queue:self.operationQueues];
     requestInfo.operation = operation;
     __weak CSSMultiRequestInfo *weakRequestInfo = requestInfo;
@@ -214,16 +214,16 @@
     for (CSSMultiRequestInfo *info in self.requestInfo.allValues) {
         if (!info.isIndependent) {
             [self.activeRids addObject:@(info.requestId)];
-            CSSOperation *operation = [self createOperationWithRequestInfo:info];
+            CSSOperation *operation = [self _createOperationWithRequestInfo:info];
             [mRequests addObject:operation];
             [operation asyncStart];
         }
     }
     [self _addDependencyWithActiveRids:self.activeRids];
-    [self addCompleteOperationWithActiveRequests:mRequests.copy];
+    [self _addCompleteOperationWithActiveRequests:mRequests.copy];
 }
 
-- (void)addCompleteOperationWithActiveRequests:(NSArray<CSSOperation *> *)operations {
+- (void)_addCompleteOperationWithActiveRequests:(NSArray<CSSOperation *> *)operations {
     CSSOperation *completeOperation = [CSSOperation operationWithType:kCSSOperationTypeConcurrent queue:self.operationQueues];
     [completeOperation addDependencyArray:operations];
     completeOperation.blockOnMainThread = ^(__kindof CSSOperation *maker) {
@@ -277,8 +277,10 @@
         }
         return;
     }
+    
     BOOL success = [[CSSNetworkingManager sharedClient] strictSuccessForResponse:resp];
     [self _removeDependencyWithRid:rid activeRids:self.activeRids resp:resp isSuccess:success];
+    
     if (success) {
         if ([self.delegate respondsToSelector:@selector(viewModel:success:requestId:)]) {
             [self.delegate viewModel:self success:resp requestId:rid];

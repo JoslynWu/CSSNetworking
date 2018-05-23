@@ -9,7 +9,8 @@ target 'Example' do
   pod 'YYModel', '~> 1.0.4'
   pod 'CSSModel', '~> 0.0.3'
   pod 'MJExtension', '~> 3.0.13'
-  pod 'CSSOperation', :git => 'https://github.com/JoslynWu/CSSOperation.git'
+  pod 'CSSOperation', :path => '../../CSSOperation'
+  # pod 'CSSOperation', :git => 'https://github.com/JoslynWu/CSSOperation.git'
   # pod 'CSSPrettyPrinted', '~> 0.1.1'
 
   target 'ExampleTests' do
