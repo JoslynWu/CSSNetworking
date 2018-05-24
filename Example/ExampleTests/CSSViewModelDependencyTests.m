@@ -1,8 +1,8 @@
 //
-//  CSSMultiRequestTests.m
-//  CSSNetworkingTests
+//  CSSViewModelDependencyTests.m
+//  ExampleTests
 //
-//  Created by Joslyn Wu on 2018/2/6.
+//  Created by Joslyn Wu on 2018/5/24.
 //  Copyright © 2018年 Joslyn Wu. All rights reserved.
 //
 
@@ -15,18 +15,22 @@
 typedef NS_ENUM(NSInteger, requestId) {
     requestIdOne = 1,
     requestIdTwo,
-    requestIdThree
+    requestIdThree,
+    requestIdFour,
 };
 
 static NSInteger requestCount = 0;
+static NSInteger operationCompleteCount = 0;
 
-@interface CSSMultiRequestTests : XCTestCase <CSSMultiRequestViewModelDelegate>
+@interface CSSViewModelDependencyTests : XCTestCase <CSSMultiRequestViewModelDelegate>
 
 @property (nonatomic, strong) CSSMultiRequestViewModel *vm;
+@property (nonatomic, strong) NSMutableArray<NSNumber *> *backIds;
+@property (nonatomic, strong) NSArray<NSNumber *> *currentRids;
 
 @end
 
-@implementation CSSMultiRequestTests
+@implementation CSSViewModelDependencyTests
 
 - (void)setUp {
     [super setUp];
@@ -49,25 +53,85 @@ static NSInteger requestCount = 0;
         }];
         
         make.requestComplete = ^(NSArray<NSNumber *> * _Nonnull rids) {
-            XCTAssertTrue([rids containsObject:@(requestIdOne)]);
-            XCTAssertTrue([rids containsObject:@(requestIdTwo)]);
-            XCTAssertTrue([rids containsObject:@(requestIdThree)]);
-            XCTAssertTrue(requestCount == 3);
+            operationCompleteCount++;
+            weakSelf.currentRids = rids;
             CSS_POST_NOTIF
         };
     }];
-
+    
+    self.backIds = [NSMutableArray arrayWithCapacity:self.vm.count];
 }
 
 - (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    requestCount = 0;
+    operationCompleteCount = 0;
+    [self.backIds removeAllObjects];
     [super tearDown];
 }
 
-- (void)testSendMultiRequest {
+- (void)testSuccessDependency {
+    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+        CSSNormalResponseData *respData = resp.processData;
+        CSSDataModel *dataModel = respData.json;
+        return [dataModel.contentCode isEqualToString:@"tool"];
+    }];
+    
+    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+        return YES;
+    }];
+    
     [self.vm sendAllRequest];
-
+    
     CSS_WAIT
+    XCTAssertTrue([self.backIds indexOfObject:@(requestIdOne)] > [self.backIds indexOfObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.backIds indexOfObject:@(requestIdTwo)] > [self.backIds indexOfObject:@(requestIdThree)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdOne)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdThree)]);
+    XCTAssertTrue(self.currentRids.count == self.backIds.count);
+    XCTAssertTrue(operationCompleteCount == 1);
+}
+
+- (void)testFailureDependency {
+    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+        return YES;
+    }];
+    
+    [self.vm sendAllRequest];
+    
+    CSS_WAIT
+    XCTAssertTrue([self.backIds indexOfObject:@(requestIdOne)] > [self.backIds indexOfObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.backIds indexOfObject:@(requestIdTwo)] > [self.backIds indexOfObject:@(requestIdThree)]);
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdOne)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdThree)]);
+    XCTAssertTrue(self.currentRids.count == self.backIds.count);
+    XCTAssertTrue(requestCount == 2);
+    XCTAssertTrue(operationCompleteCount == 1);
+}
+
+- (void)testMoreFailureDependency {
+    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm sendAllRequest];
+    
+    CSS_WAIT
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdOne)]);
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdThree)]);
+    XCTAssertTrue(self.currentRids.count == self.backIds.count);
+    XCTAssertTrue(requestCount == 1);
+    XCTAssertTrue(operationCompleteCount == 1);
 }
 
 #pragma mark - ********************* action *********************
@@ -122,6 +186,7 @@ static NSInteger requestCount = 0;
     
     if (!(resp.respType == CACHE)) {
         requestCount++;
+        [self.backIds addObject:@(rid)];
     }
 }
 

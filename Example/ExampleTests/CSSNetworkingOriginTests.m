@@ -46,7 +46,7 @@
         CSS_POST_NOTIF
     };
     request.failedBlock = ^(CSSWebResponse *resp) {
-        XCTAssert(resp.respType == SUCCESS, @"请求成功，结果失败");
+        XCTAssert(NO, @"网络异常，请检查");
         CSS_POST_NOTIF
     };
     [request sendRequest];
@@ -65,7 +65,7 @@
         CSS_POST_NOTIF
     };
     request.failedBlock = ^(CSSWebResponse *resp) {
-        XCTAssert(resp.respType == SUCCESS, @"请求成功，结果失败");
+        XCTAssert(NO, @"网络异常，请检查");
         CSS_POST_NOTIF
     };
     [request sendRequest];

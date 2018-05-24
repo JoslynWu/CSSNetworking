@@ -8,7 +8,6 @@
 
 #import "CSSWebRequest.h"
 #import <CSSModel/CSSModel.h>
-#import <CSSPrettyPrinted/CSSPrettyPrinted.h>
 #import "CSSWebRequestService.h"
 #import "CSSNetworkingDefine.h"
 #import "CSSNetworkingManager+Private.h"
@@ -134,7 +133,7 @@
                  NSStringFromClass([self class]),
                  task.tid,
                  task.dataTask.originalRequest.URL.absoluteString,
-                 task.dataTask.originalRequest.HTTPBody.css_debugSting);
+                 task.webRequest.parameters);
 }
 
 @end

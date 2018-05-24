@@ -28,6 +28,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** 响应对象 */
 @property (nonatomic, strong) CSSWebResponseData *respData;
 
+/** 请求操作. 每次发送请求时，实例会被重新赋值 */
+@property (nonatomic, strong) CSSOperation *operation;
+
 /**
  是否为例外。
  - 例外是相对于`sendAllRequest`而言。
@@ -66,7 +69,7 @@ typedef CSSMultiRequestViewModel vmCls;
  失败时调用
  - 严格的失败。 即为严格成功的else
  */
-- (void)viewModel:(vmCls *)vm failed:(CSSWebResponse *)resp requestId:(NSInteger)rid;
+- (void)viewModel:(vmCls *)vm failure:(CSSWebResponse *)resp requestId:(NSInteger)rid;
 
 /**
  加载缓存时回调。
@@ -85,6 +88,7 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 
 @interface CSSMultiRequestViewModel : NSObject
 
+#pragma mark - init
 /**
  初始化方法
 
@@ -95,6 +99,10 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 - (instancetype)initWithDelegate:(nullable id<CSSMultiRequestViewModelDelegate>)delegate
                       addRequest:(nullable void(^)(vmCls *make))block NS_DESIGNATED_INITIALIZER;
 
+@property (nonatomic, weak) id<CSSMultiRequestViewModelDelegate> delegate;
+
+
+#pragma mark - config request
 /**
  添加请求
 
@@ -103,6 +111,30 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  */
 - (void)addRequestWithId:(NSInteger)rid config:(CSSMultiRequestConfigBlcok)configBlock;
 
+/**
+ 添加成功回调时的条件依赖
+ - condition为YES时按照常规方式执行
+ - condition为NO时后面的依赖的操作被取消
+
+ @param rid 依赖id
+ @param fromRid 被依赖的id
+ @param condition 条件
+ */
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid success:(BOOL(^)(CSSWebResponse *))condition;
+
+/**
+ 添加失败回调时的条件依赖
+ - condition为YES时按照常规方式执行
+ - condition为NO时后面的依赖的操作被取消
+ 
+ @param rid 依赖id
+ @param fromRid 被依赖的id
+ @param condition 条件
+ */
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid failure:(BOOL(^)(CSSWebResponse *))condition;
+
+
+#pragma mark - send request
 /**
  发送全部请求
 
@@ -117,21 +149,22 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  @return 操作组。可以指定其优先级等
  */
 - (CSSOperation *)sendRequestWithIds:(NSInteger)rid, ...;
-
-/**
- 发送指定请求
-
- @param rid 请求的ID
- @return 操作组。可以指定其优先级等
- */
+- (CSSOperation *)sendRequestWithIdArray:(NSArray<NSNumber *> *)rids;
 - (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid;
 
+
+#pragma mark - CSSRequestInfo
 /** 获取指定请求信息 */
 - (CSSRequestInfo *)requestInfoWithId:(NSInteger)rid;
 
 /** 移除指定请求 */
-- (void)removeRequestInfoWithId:(NSInteger)rid;
+- (void)removeRequestWithId:(NSInteger)rid;
 
+@property (nonatomic, strong, readonly) NSArray<CSSRequestInfo *> *allRequestInfo;
+@property (nonatomic, assign, readonly) NSInteger count;
+
+
+#pragma mark - call-back
 /**
  一组请求结束时的回调。
  - 单个请求也可视为一组请求
