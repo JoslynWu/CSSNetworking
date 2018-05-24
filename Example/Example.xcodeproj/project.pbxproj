@@ -40,6 +40,7 @@
 		9E96F27D208D7CF600F8443D /* CSSNetworkingHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F270208D7CF600F8443D /* CSSNetworkingHandle.m */; };
 		9E96F27E208D7CF600F8443D /* CSSNetworkingToModelStyleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F272208D7CF600F8443D /* CSSNetworkingToModelStyleTests.m */; };
 		9E96F27F208D7CF600F8443D /* CSSNetworkingCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F273208D7CF600F8443D /* CSSNetworkingCacheTests.m */; };
+		9EBE37B620B6F74D00C7DD31 /* CSSViewModelDependencyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE37B520B6F74D00C7DD31 /* CSSViewModelDependencyTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		9E96F272208D7CF600F8443D /* CSSNetworkingToModelStyleTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSNetworkingToModelStyleTests.m; sourceTree = "<group>"; };
 		9E96F273208D7CF600F8443D /* CSSNetworkingCacheTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSNetworkingCacheTests.m; sourceTree = "<group>"; };
 		9E96F274208D7CF600F8443D /* CSSUnitTestDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSUnitTestDefine.h; sourceTree = "<group>"; };
+		9EBE37B520B6F74D00C7DD31 /* CSSViewModelDependencyTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CSSViewModelDependencyTests.m; sourceTree = "<group>"; };
 		B674C5DC8E4EDAF769DEFE0F /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4289F8F884F84A1ABD4C3BE /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		F87CA7FE34AC16FC9AC1B3D9 /* Pods-ExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ExampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ExampleTests/Pods-ExampleTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 				9E96F260208D7CF500F8443D /* CSSViewModelSingleRequetTests.m */,
 				9E7A7607209B0076008E4A3E /* CSSViewModelMixingRequestTests.m */,
 				9E3B27D1209FFDE9005B3102 /* CSSViewModelCustomRequestTests.m */,
+				9EBE37B520B6F74D00C7DD31 /* CSSViewModelDependencyTests.m */,
 			);
 			path = ExampleTests;
 			sourceTree = "<group>";
@@ -500,6 +503,7 @@
 				9E96F27E208D7CF600F8443D /* CSSNetworkingToModelStyleTests.m in Sources */,
 				9E96F276208D7CF600F8443D /* CSSViewModelSingleRequetTests.m in Sources */,
 				9E96F27A208D7CF600F8443D /* CSSContentModel.m in Sources */,
+				9EBE37B620B6F74D00C7DD31 /* CSSViewModelDependencyTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,7 +654,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Example/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joslyn.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -664,7 +671,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = Example/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joslyn.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -678,7 +688,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joslyn.ExampleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -693,7 +707,11 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = ExampleTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.joslyn.ExampleTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";

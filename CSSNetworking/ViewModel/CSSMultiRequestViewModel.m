@@ -14,6 +14,7 @@
 @interface CSSMultiRequestInfo ()
 @property (nonatomic, copy) BOOL(^successConditionBlock)(CSSWebResponse *);
 @property (nonatomic, copy) BOOL(^failureConditionBlock)(CSSWebResponse *);
+// 被这些rid依赖
 @property (nonatomic, strong) NSMutableArray<NSNumber *> *dependencyRids;
 @end
 
@@ -47,7 +48,8 @@
 }
 
 #pragma mark  -  public
-- (instancetype)initWithDelegate:(id<CSSMultiRequestViewModelDelegate>)delegate addRequest:(void(^)(vmCls *make))block {
+- (instancetype)initWithDelegate:(id<CSSMultiRequestViewModelDelegate>)delegate
+                      addRequest:(void(^)(vmCls *make))block {
     self = [super init];
     if (!self) {
         return nil;
@@ -60,7 +62,8 @@
     managerSerialQueue.name = @"CSS.MultiRequestViewModel.Mannager.SerialQueue";
     NSOperationQueue *requestConcurrentQueue = [[NSOperationQueue alloc] init];
     requestConcurrentQueue.name = @"CSS.MultiRequestViewModel.request.ConcurrrentQueue";
-    _operationQueues = @{kCSSOperationTypeSerial: managerSerialQueue, kCSSOperationTypeConcurrent: requestConcurrentQueue};
+    _operationQueues = @{kCSSOperationTypeSerial: managerSerialQueue,
+                         kCSSOperationTypeConcurrent: requestConcurrentQueue};
     
     if (block) {
         block(self);
@@ -78,22 +81,29 @@
     [self _buildRequestWithModel:requestInfo];
 }
 
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid success:(BOOL(^)(CSSWebResponse *))condition {
-    NSAssert1([self.requestInfo.allKeys containsObject:@(rid)], @"[CSSMultiRequestViewModel] contains one invalid rid %li", rid);
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid
+                    success:(BOOL(^)(CSSWebResponse *))condition {
+    NSAssert1([self.requestInfo.allKeys containsObject:@(rid)],
+              @"[CSSMultiRequestViewModel] contains one invalid rid %li", rid);
+    
     CSSRequestInfo *fromInfo = [self requestInfoWithId:fromRid];
     [fromInfo.dependencyRids addObject:@(rid)];
     fromInfo.successConditionBlock = condition;
 }
 
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid failure:(BOOL(^)(CSSWebResponse *))condition {
-    NSAssert1([self.requestInfo.allKeys containsObject:@(rid)], @"[CSSMultiRequestViewModel] contains one invalid rid %li", rid);
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid
+                    failure:(BOOL(^)(CSSWebResponse *))condition {
+    
+    NSAssert1([self.requestInfo.allKeys containsObject:@(rid)],
+              @"[CSSMultiRequestViewModel] contains one invalid rid %li", rid);
     CSSRequestInfo *fromInfo = [self requestInfoWithId:fromRid];
     [fromInfo.dependencyRids addObject:@(rid)];
     fromInfo.failureConditionBlock  = condition;
 }
 
 - (CSSOperation *)sendAllRequest {
-    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial queue:self.operationQueues];
+    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial
+                                                        queue:self.operationQueues];
     __weak typeof(self) weakSelf = self;
     operation.blockOnCurrentThread = ^(CSSOperation *maker) {
         weakSelf.currentOperation = maker;
@@ -114,7 +124,8 @@
     }
     va_end(argList);
     
-    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial queue:self.operationQueues];
+    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial
+                                                        queue:self.operationQueues];
     __weak typeof(self) weakSelf = self;
     operation.blockOnCurrentThread = ^(CSSOperation *maker) {
         weakSelf.currentOperation = maker;
@@ -125,7 +136,8 @@
 }
 
 - (CSSOperation *)sendRequestWithIdArray:(NSArray<NSNumber *> *)rids {
-    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial queue:self.operationQueues];
+    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial
+                                                        queue:self.operationQueues];
     __weak typeof(self) weakSelf = self;
     operation.blockOnCurrentThread = ^(CSSOperation *maker) {
         weakSelf.currentOperation = maker;
@@ -135,6 +147,7 @@
     return operation;
 }
 
+#pragma mark - request info
 - (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid {
     return [self sendRequestWithIds:rid, nil];
 }
@@ -143,11 +156,19 @@
     return [self.requestInfo objectForKey:@(rid)];
 }
 
-- (void)removeRequestInfoWithId:(NSInteger)rid {
+- (void)removeRequestWithId:(NSInteger)rid {
     [self.requestInfo removeObjectForKey:@(rid)];
 }
 
-#pragma mark  -  private
+- (NSArray<CSSRequestInfo *> *)allRequestInfo {
+    return self.requestInfo.allValues;
+}
+
+- (NSInteger)count {
+    return self.requestInfo.count;
+}
+
+#pragma mark - ********************* private *********************
 - (void)_sendRequestWithIds:(NSArray<NSNumber *> *)rids {
     [self.activeRids removeAllObjects];
     NSMutableArray *mArr = [[NSMutableArray alloc] init];
@@ -159,15 +180,18 @@
         [self.activeRids addObject:rid];
         CSSOperation *operation = [self _createOperationWithRequestInfo:self.requestInfo[rid]];
         [mArr addObject:operation];
-        [operation asyncStart];
     }
     [self _addDependencyWithActiveRids:self.activeRids];
-    [self _addCompleteOperationWithActiveRequests:mArr.copy];
+    CSSOperation *completeOp = [self _addCompleteOperationWithActiveRequests:mArr.copy];
+    [mArr addObject:completeOp];
+    [NSOperationQueue asyncStartArray:mArr.copy];
 }
 
 - (CSSOperation *)_createOperationWithRequestInfo:(CSSMultiRequestInfo *)requestInfo {
-    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeConcurrent queue:self.operationQueues];
+    CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeConcurrent
+                                                        queue:self.operationQueues];
     requestInfo.operation = operation;
+    operation.name = [NSString stringWithFormat:@"%ld", requestInfo.requestId];
     __weak CSSMultiRequestInfo *weakRequestInfo = requestInfo;
     operation.blockOnMainThread = ^(__kindof CSSOperation *maker) {
         [weakRequestInfo.request cancelFetch];
@@ -200,40 +224,51 @@
     } else {
         condition = info.failureConditionBlock ? info.failureConditionBlock(resp) : YES;
     }
-    for (NSNumber *rid in info.dependencyRids) {
-        if ([rids containsObject:rid]) {
-            CSSOperation *afterOp = [self requestInfoWithId:rid.integerValue].operation;
-            [afterOp removeDependency:info.operation];
+    
+    for (NSNumber *r in info.dependencyRids.copy) {
+        if ([rids containsObject:r]) {
+            CSSRequestInfo *afterInfo = [self requestInfoWithId:r.integerValue];
+            [info.dependencyRids removeObject:r];
+            if (condition) {
+                [afterInfo.operation removeDependency:info.operation];
+                continue;
+            }
+            [self.activeRids removeObject:r];
+            [afterInfo.operation cancel];
+            for (NSNumber *subRid in rids) {
+                CSSRequestInfo *subInfo = [self requestInfoWithId:subRid.integerValue];
+                if ([subInfo.operation.dependencies containsObject:afterInfo.operation]) {
+                    [afterInfo.dependencyRids removeObject:subRid];
+                    [self.activeRids removeObject:subRid];
+                    [subInfo.operation cancel];
+                }
+            }
         }
     }
 }
 
 - (void)_sendAllRequest {
     [self.activeRids removeAllObjects];
-    NSMutableArray *mRequests = [[NSMutableArray alloc] init];
     for (CSSMultiRequestInfo *info in self.requestInfo.allValues) {
         if (!info.isIndependent) {
             [self.activeRids addObject:@(info.requestId)];
-            CSSOperation *operation = [self _createOperationWithRequestInfo:info];
-            [mRequests addObject:operation];
-            [operation asyncStart];
         }
     }
-    [self _addDependencyWithActiveRids:self.activeRids];
-    [self _addCompleteOperationWithActiveRequests:mRequests.copy];
+    [self _sendRequestWithIds:self.activeRids.copy];
 }
 
-- (void)_addCompleteOperationWithActiveRequests:(NSArray<CSSOperation *> *)operations {
-    CSSOperation *completeOperation = [CSSOperation operationWithType:kCSSOperationTypeConcurrent queue:self.operationQueues];
-    [completeOperation addDependencyArray:operations];
-    completeOperation.blockOnMainThread = ^(__kindof CSSOperation *maker) {
+- (CSSOperation *)_addCompleteOperationWithActiveRequests:(NSArray<CSSOperation *> *)operations {
+    CSSOperation *complete = [CSSOperation operationWithType:kCSSOperationTypeConcurrent
+                                                       queue:self.operationQueues];
+    [complete addDependencyArray:operations];
+    complete.blockOnMainThread = ^(__kindof CSSOperation *maker) {
         [self _executeCompleteHandle];
         maker.executing = NO;
         maker.finished = YES;
         self.currentOperation.finished = YES;
         self.currentOperation.executing = NO;
     };
-    [completeOperation asyncStart];
+    return complete;
 }
 
 - (void)_buildRequestWithModel:(CSSMultiRequestInfo *)model {

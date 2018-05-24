@@ -171,7 +171,7 @@ static NSInteger operationCompleteCount = 0;
 }
 
 - (void)viewModel:(vmCls *)vm failure:(CSSWebResponse *)resp requestId:(NSInteger)rid {
-    XCTAssert(resp.respType == SUCCESS, @"请求成功，结果失败");
+    XCTAssert(NO, @"网络异常，请检查");
 }
 
 - (void)viewModel:(vmCls *)vm cache:(CSSWebResponse *)resp requestId:(NSInteger)rid {

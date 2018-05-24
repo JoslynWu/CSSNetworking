@@ -111,7 +111,26 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  */
 - (void)addRequestWithId:(NSInteger)rid config:(CSSMultiRequestConfigBlcok)configBlock;
 
+/**
+ 添加成功回调时的条件依赖
+ - condition为YES时按照常规方式执行
+ - condition为NO时后面的依赖的操作被取消
+
+ @param rid 依赖id
+ @param fromRid 被依赖的id
+ @param condition 条件
+ */
 - (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid success:(BOOL(^)(CSSWebResponse *))condition;
+
+/**
+ 添加失败回调时的条件依赖
+ - condition为YES时按照常规方式执行
+ - condition为NO时后面的依赖的操作被取消
+ 
+ @param rid 依赖id
+ @param fromRid 被依赖的id
+ @param condition 条件
+ */
 - (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid failure:(BOOL(^)(CSSWebResponse *))condition;
 
 
@@ -134,12 +153,15 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
 - (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid;
 
 
-#pragma mark - CSSRequestInfo operation
+#pragma mark - CSSRequestInfo
 /** 获取指定请求信息 */
 - (CSSRequestInfo *)requestInfoWithId:(NSInteger)rid;
 
 /** 移除指定请求 */
-- (void)removeRequestInfoWithId:(NSInteger)rid;
+- (void)removeRequestWithId:(NSInteger)rid;
+
+@property (nonatomic, strong, readonly) NSArray<CSSRequestInfo *> *allRequestInfo;
+@property (nonatomic, assign, readonly) NSInteger count;
 
 
 #pragma mark - call-back
