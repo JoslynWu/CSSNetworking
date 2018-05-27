@@ -41,13 +41,24 @@
 
 @implementation CSSViewModel
 
-#pragma mark  -  lifecycle
+#pragma mark - ********************* public *********************
+#pragma mark - init
 - (instancetype)init {
     return [self initWithDelegate:nil addRequest:nil];
 }
 
-#pragma mark - ********************* public *********************
-- (instancetype)initWithDelegate:(nullable id<CSSViewModelDelegate>)delegate
++ (nullable instancetype)viewModelWithDelegate:(nullable id<CSSViewModelDelegate>)delegate {
+    
+    return [self viewModelWithDelegate:delegate addRequest:nil];
+}
+
++ (nullable instancetype)viewModelWithDelegate:(nullable id<CSSViewModelDelegate>)delegate
+                                    addRequest:(nullable void(^)(CSSViewModel *make))block {
+    
+    return [[CSSViewModel alloc] initWithDelegate:delegate addRequest:block];
+}
+
+- (nullable instancetype)initWithDelegate:(nullable id<CSSViewModelDelegate>)delegate
                       addRequest:(nullable void(^)(CSSViewModel *make))block {
     self = [super init];
     if (!self) {
@@ -70,6 +81,7 @@
     return self;
 }
 
+#pragma mark - add request
 - (void)addRequestWithId:(NSInteger)rid config:(CSSVMConfigBlcok)configBlock {
     CSSVMRequestItem *item = [CSSVMRequestItem new];
     item.requestId = rid;
@@ -80,8 +92,10 @@
     [self _buildRequestWithModel:item];
 }
 
+#pragma mark - dependency
 - (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid
                     success:(nullable CSSVMConditionBlock)condition {
+    
     NSAssert1([self.itemInfos.allKeys containsObject:@(rid)],
               @"[CSSViewModel] contains one invalid rid %li", rid);
     
@@ -92,8 +106,10 @@
 
 - (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid
                     failure:(nullable CSSVMConditionBlock)condition {
+    
     NSAssert1([self.itemInfos.allKeys containsObject:@(rid)],
               @"[CSSViewModel] contains one invalid rid %li", rid);
+    
     CSSVMRequestItem *fromInfo = [self requestInfoWithId:fromRid];
     [fromInfo.dependencyRids addObject:@(rid)];
     fromInfo.failureConditionBlock  = condition;

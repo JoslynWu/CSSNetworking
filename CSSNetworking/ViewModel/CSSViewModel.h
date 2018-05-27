@@ -96,11 +96,14 @@ typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
  @param block 可以在其中添加请求，和发送请求
  @return instance
  */
-- (instancetype)initWithDelegate:(nullable id<CSSViewModelDelegate>)delegate
-                      addRequest:(nullable void(^)(CSSViewModel *make))block NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithDelegate:(nullable id<CSSViewModelDelegate>)delegate
+                               addRequest:(nullable void(^)(CSSViewModel *make))block NS_DESIGNATED_INITIALIZER;
+
++ (nullable instancetype)viewModelWithDelegate:(nullable id<CSSViewModelDelegate>)delegate
+                                    addRequest:(nullable void(^)(CSSViewModel *make))block;
++ (nullable instancetype)viewModelWithDelegate:(nullable id<CSSViewModelDelegate>)delegate;
 
 @property (nonatomic, weak) id<CSSViewModelDelegate> delegate;
-
 
 #pragma mark - config request
 /**
