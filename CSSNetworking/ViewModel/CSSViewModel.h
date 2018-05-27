@@ -12,9 +12,9 @@
 #import "CSSWebResponse.h"
 #import <CSSOperation/CSSOperation.h>
 
-#pragma mark - ********************* CSSViewModelItemInfo *********************
+#pragma mark - ********************* CSSVMRequestItem *********************
 NS_ASSUME_NONNULL_BEGIN
-@interface CSSViewModelItemInfo : NSObject
+@interface CSSVMRequestItem : NSObject
 
 /** 请求标记. 不能等于NSIntegerMax */
 @property (nonatomic, assign) NSInteger requestId;
@@ -82,8 +82,8 @@ NS_ASSUME_NONNULL_END
 
 #pragma mark - ********************* CSSViewModel *********************
 NS_ASSUME_NONNULL_BEGIN
-typedef CSSViewModelItemInfo CSSVMRequestInfo;
-typedef void(^CSSVMConfigBlcok)(CSSVMRequestInfo *requestInfo);
+
+typedef void(^CSSVMConfigBlcok)(CSSVMRequestItem *item);
 typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
 
 @interface CSSViewModel : NSObject
@@ -153,14 +153,14 @@ typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
 - (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid;
 
 
-#pragma mark - CSSVMRequestInfo
+#pragma mark - CSSVMRequestItem
 /** 获取指定请求信息 */
-- (CSSVMRequestInfo *)requestInfoWithId:(NSInteger)rid;
+- (CSSVMRequestItem *)requestInfoWithId:(NSInteger)rid;
 
 /** 移除指定请求 */
 - (void)removeRequestWithId:(NSInteger)rid;
 
-@property (nonatomic, strong, readonly) NSArray<CSSVMRequestInfo *> *allRequestInfo;
+@property (nonatomic, strong, readonly) NSMutableDictionary<NSNumber *, CSSVMRequestItem *> *itemInfos;
 @property (nonatomic, assign, readonly) NSInteger count;
 
 

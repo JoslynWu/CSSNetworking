@@ -37,19 +37,25 @@ static NSInteger operationCompleteCount = 0;
     
     __weak typeof(self) weakSelf = self;
     self.vm = [[CSSViewModel alloc] initWithDelegate:self addRequest:^(CSSViewModel *make) {
-        [make addRequestWithId:requestIdOne config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
-            requestInfo.request = [CSSNormalRequest new];
-            requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
+        [make addRequestWithId:requestIdOne config:^(CSSVMRequestItem * _Nonnull item) {
+            item.request = [CSSNormalRequest new];
+            item.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
         }];
         
-        [make addRequestWithId:requestIdTwo config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
-            requestInfo.request = [CSSCacheRequest new];
-            requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
+        [make addRequestWithId:requestIdTwo config:^(CSSVMRequestItem * _Nonnull item) {
+            item.request = [CSSCacheRequest new];
+            item.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
         }];
         
-        [make addRequestWithId:requestIdThree config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
-            requestInfo.request = [CSSNormalRequest new];
-            requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"info"];
+        [make addRequestWithId:requestIdThree config:^(CSSVMRequestItem * _Nonnull item) {
+            item.request = [CSSNormalRequest new];
+            item.requestData = [weakSelf requestDataForRequestWithCode:@"info"];
+        }];
+        
+        [make addRequestWithId:requestIdFour config:^(CSSVMRequestItem * _Nonnull item) {
+            item.request = [CSSNormalRequest new];
+            item.requestData = [weakSelf requestDataForRequestWithCode:@"info"];
+            item.independent = YES;
         }];
         
         make.requestComplete = ^(NSArray<NSNumber *> * _Nonnull rids) {
@@ -85,9 +91,15 @@ static NSInteger operationCompleteCount = 0;
     CSS_WAIT
     XCTAssertTrue([self.backIds indexOfObject:@(requestIdOne)] > [self.backIds indexOfObject:@(requestIdTwo)]);
     XCTAssertTrue([self.backIds indexOfObject:@(requestIdTwo)] > [self.backIds indexOfObject:@(requestIdThree)]);
+    
     XCTAssertTrue([self.currentRids containsObject:@(requestIdOne)]);
     XCTAssertTrue([self.currentRids containsObject:@(requestIdTwo)]);
     XCTAssertTrue([self.currentRids containsObject:@(requestIdThree)]);
+    
+    XCTAssertTrue([self.backIds containsObject:@(requestIdOne)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdThree)]);
+    
     XCTAssertTrue(self.currentRids.count == self.backIds.count);
     XCTAssertTrue(operationCompleteCount == 1);
 }
@@ -106,9 +118,15 @@ static NSInteger operationCompleteCount = 0;
     CSS_WAIT
     XCTAssertTrue([self.backIds indexOfObject:@(requestIdOne)] > [self.backIds indexOfObject:@(requestIdTwo)]);
     XCTAssertTrue([self.backIds indexOfObject:@(requestIdTwo)] > [self.backIds indexOfObject:@(requestIdThree)]);
+    
     XCTAssertTrue(![self.currentRids containsObject:@(requestIdOne)]);
     XCTAssertTrue([self.currentRids containsObject:@(requestIdTwo)]);
     XCTAssertTrue([self.currentRids containsObject:@(requestIdThree)]);
+    
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdOne)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdThree)]);
+    
     XCTAssertTrue(self.currentRids.count == self.backIds.count);
     XCTAssertTrue(requestCount == 2);
     XCTAssertTrue(operationCompleteCount == 1);
@@ -129,6 +147,73 @@ static NSInteger operationCompleteCount = 0;
     XCTAssertTrue(![self.currentRids containsObject:@(requestIdOne)]);
     XCTAssertTrue(![self.currentRids containsObject:@(requestIdTwo)]);
     XCTAssertTrue([self.currentRids containsObject:@(requestIdThree)]);
+    
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdOne)]);
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdThree)]);
+    
+    XCTAssertTrue(self.currentRids.count == self.backIds.count);
+    XCTAssertTrue(requestCount == 1);
+    XCTAssertTrue(operationCompleteCount == 1);
+}
+
+- (void)testMoreFailureMixingDependency {
+    self.vm.itemInfos[@(requestIdFour)].independent = NO;
+    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm sendAllRequest];
+    
+    CSS_WAIT
+    
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdOne)]);
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdThree)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdFour)]);
+    
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdOne)]);
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdThree)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdFour)]);
+    
+    XCTAssertTrue(self.currentRids.count == self.backIds.count);
+    XCTAssertTrue(requestCount == 2);
+    XCTAssertTrue(operationCompleteCount == 1);
+}
+
+- (void)testMoreFailureDeepHierarchyDependency {
+    self.vm.itemInfos[@(requestIdFour)].independent = NO;
+    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm addDependencyForRid:requestIdThree from:requestIdFour success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm sendAllRequest];
+    
+    CSS_WAIT
+    NSLog(@"---->%@, %@", self.currentRids, self.backIds);
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdOne)]);
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdTwo)]);
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdThree)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdFour)]);
+    
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdOne)]);
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdTwo)]);
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdThree)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdFour)]);
+    
     XCTAssertTrue(self.currentRids.count == self.backIds.count);
     XCTAssertTrue(requestCount == 1);
     XCTAssertTrue(operationCompleteCount == 1);

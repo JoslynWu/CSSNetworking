@@ -33,19 +33,19 @@ static NSInteger requestCount = 0;
     
     __weak typeof(self) weakSelf = self;
     self.vm = [[CSSViewModel alloc] initWithDelegate:self addRequest:^(CSSViewModel *make) {
-        [make addRequestWithId:requestIdOne config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
-            requestInfo.request = [CSSNormalRequest new];
-            requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
+        [make addRequestWithId:requestIdOne config:^(CSSVMRequestItem * _Nonnull item) {
+            item.request = [CSSNormalRequest new];
+            item.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
         }];
         
-        [make addRequestWithId:requestIdTwo config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
-            requestInfo.request = [CSSCacheRequest new];
-            requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
+        [make addRequestWithId:requestIdTwo config:^(CSSVMRequestItem * _Nonnull item) {
+            item.request = [CSSCacheRequest new];
+            item.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
         }];
         
-        [make addRequestWithId:requestIdThree config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
-            requestInfo.request = [CSSNormalRequest new];
-            requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"info"];
+        [make addRequestWithId:requestIdThree config:^(CSSVMRequestItem * _Nonnull item) {
+            item.request = [CSSNormalRequest new];
+            item.requestData = [weakSelf requestDataForRequestWithCode:@"info"];
         }];
         
         make.requestComplete = ^(NSArray<NSNumber *> * _Nonnull rids) {

@@ -32,15 +32,15 @@ static NSInteger requestCount = 0;
     
     __weak typeof(self) weakSelf = self;
     self.vm = [[CSSViewModel alloc] initWithDelegate:self addRequest:^(CSSViewModel *make) {
-        [make addRequestWithId:requestIdOne config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
-            requestInfo.request = [CSSNormalRequest new];
-            requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
+        [make addRequestWithId:requestIdOne config:^(CSSVMRequestItem * _Nonnull item) {
+            item.request = [CSSNormalRequest new];
+            item.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
         }];
         
-        [make addRequestWithId:requestIdTwo config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
-            requestInfo.independent = YES;
-            requestInfo.request = [CSSCacheRequest new];
-            requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
+        [make addRequestWithId:requestIdTwo config:^(CSSVMRequestItem * _Nonnull item) {
+            item.independent = YES;
+            item.request = [CSSCacheRequest new];
+            item.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
         }];
         
         make.requestComplete = ^(NSArray<NSNumber *> * _Nonnull rids) {
@@ -57,7 +57,7 @@ static NSInteger requestCount = 0;
 }
 
 - (void)testSingleRequestWithNoCache {
-    CSSVMRequestInfo *info = (CSSVMRequestInfo *)[self.vm requestInfoWithId:requestIdOne];
+    CSSVMRequestItem *info = (CSSVMRequestItem *)[self.vm requestInfoWithId:requestIdOne];
     ((CSSNormalRequestData *)info.requestData).contentCode = @"tool";
     [self.vm sendSingleRequestWithId:requestIdOne];
     
@@ -108,7 +108,7 @@ static NSInteger requestCount = 0;
 - (void)viewModel:(CSSViewModel *)vm complete:(CSSWebResponse *)resp requestId:(NSInteger)rid {
     if (rid == requestIdOne || rid == requestIdTwo) {
         [self requestTestForOneWithResp:resp requestId:rid];
-        CSSVMRequestInfo *info = [vm requestInfoWithId:rid];
+        CSSVMRequestItem *info = [vm requestInfoWithId:rid];
         if (!info.independent) {
             XCTAssertTrue(rid == 1);
         }
