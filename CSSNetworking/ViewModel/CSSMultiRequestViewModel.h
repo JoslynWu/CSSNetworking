@@ -84,7 +84,8 @@ NS_ASSUME_NONNULL_END
 #pragma mark - ********************* CSSMultiRequestViewModel *********************
 NS_ASSUME_NONNULL_BEGIN
 typedef CSSMultiRequestInfo CSSRequestInfo;
-typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
+typedef void(^CSSVMConfigBlcok)(CSSRequestInfo *requestInfo);
+typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
 
 @interface CSSMultiRequestViewModel : NSObject
 
@@ -109,7 +110,7 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  @param rid 请求的标记ID，可以作为回调时的标记区分
  @param configBlock 配置请求信息
  */
-- (void)addRequestWithId:(NSInteger)rid config:(CSSMultiRequestConfigBlcok)configBlock;
+- (void)addRequestWithId:(NSInteger)rid config:(CSSVMConfigBlcok)configBlock;
 
 /**
  添加成功回调时的条件依赖
@@ -120,7 +121,7 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  @param fromRid 被依赖的id
  @param condition 条件
  */
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid success:(BOOL(^)(CSSWebResponse *))condition;
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid success:(nullable CSSVMConditionBlock)condition;
 
 /**
  添加失败回调时的条件依赖
@@ -131,7 +132,7 @@ typedef void(^CSSMultiRequestConfigBlcok)(CSSRequestInfo *requestInfo);
  @param fromRid 被依赖的id
  @param condition 条件
  */
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid failure:(BOOL(^)(CSSWebResponse *))condition;
+- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid failure:(nullable CSSVMConditionBlock)condition;
 
 
 #pragma mark - send request

@@ -12,19 +12,19 @@
 
 #pragma mark - ********************* CSSMultiRequestInfo *********************
 @interface CSSMultiRequestInfo ()
-@property (nonatomic, copy) BOOL(^successConditionBlock)(CSSWebResponse *);
-@property (nonatomic, copy) BOOL(^failureConditionBlock)(CSSWebResponse *);
+@property (nonatomic, copy, nullable) CSSVMConditionBlock successConditionBlock;
+@property (nonatomic, copy, nullable) CSSVMConditionBlock failureConditionBlock;
 // 被这些rid依赖
-@property (nonatomic, strong) NSMutableArray<NSNumber *> *dependencyRids;
+@property (nonatomic, strong) NSMutableSet<NSNumber *> *dependencyRids;
 @end
 
 @implementation CSSMultiRequestInfo
 
-- (NSMutableArray<NSNumber *> *)dependencyRids {
+- (NSMutableSet<NSNumber *> *)dependencyRids {
     if (_dependencyRids) {
         return _dependencyRids;
     }
-    return (_dependencyRids = [NSMutableArray array]);
+    return (_dependencyRids = [NSMutableSet set]);
 }
 
 @end
@@ -47,7 +47,7 @@
     return [self initWithDelegate:nil addRequest:nil];
 }
 
-#pragma mark  -  public
+#pragma mark - ********************* public *********************
 - (instancetype)initWithDelegate:(id<CSSMultiRequestViewModelDelegate>)delegate
                       addRequest:(void(^)(vmCls *make))block {
     self = [super init];
@@ -71,7 +71,7 @@
     return self;
 }
 
-- (void)addRequestWithId:(NSInteger)rid config:(CSSMultiRequestConfigBlcok)configBlock {
+- (void)addRequestWithId:(NSInteger)rid config:(CSSVMConfigBlcok)configBlock {
     CSSMultiRequestInfo *requestInfo = [CSSMultiRequestInfo new];
     requestInfo.requestId = rid;
     [self.requestInfo setObject:requestInfo forKey:@(rid)];
@@ -82,7 +82,7 @@
 }
 
 - (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid
-                    success:(BOOL(^)(CSSWebResponse *))condition {
+                    success:(nullable CSSVMConditionBlock)condition {
     NSAssert1([self.requestInfo.allKeys containsObject:@(rid)],
               @"[CSSMultiRequestViewModel] contains one invalid rid %li", rid);
     
@@ -92,8 +92,7 @@
 }
 
 - (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid
-                    failure:(BOOL(^)(CSSWebResponse *))condition {
-    
+                    failure:(nullable CSSVMConditionBlock)condition {
     NSAssert1([self.requestInfo.allKeys containsObject:@(rid)],
               @"[CSSMultiRequestViewModel] contains one invalid rid %li", rid);
     CSSRequestInfo *fromInfo = [self requestInfoWithId:fromRid];
@@ -218,27 +217,20 @@
                             resp:(CSSWebResponse *)resp
                        isSuccess:(BOOL)success {
     CSSRequestInfo *info = [self requestInfoWithId:rid];
-    BOOL condition = YES;
-    if (success) {
-        condition = info.successConditionBlock ? info.successConditionBlock(resp) : YES;
-    } else {
-        condition = info.failureConditionBlock ? info.failureConditionBlock(resp) : YES;
-    }
-    
+    CSSVMConditionBlock block = success ? info.successConditionBlock : info.failureConditionBlock;
+    BOOL condition = block ? block(resp) : YES;
+
     for (NSNumber *r in info.dependencyRids.copy) {
         if ([rids containsObject:r]) {
-            CSSRequestInfo *afterInfo = [self requestInfoWithId:r.integerValue];
-            [info.dependencyRids removeObject:r];
             if (condition) {
-                [afterInfo.operation removeDependency:info.operation];
                 continue;
             }
             [self.activeRids removeObject:r];
+            CSSRequestInfo *afterInfo = [self requestInfoWithId:r.integerValue];
             [afterInfo.operation cancel];
             for (NSNumber *subRid in rids) {
                 CSSRequestInfo *subInfo = [self requestInfoWithId:subRid.integerValue];
                 if ([subInfo.operation.dependencies containsObject:afterInfo.operation]) {
-                    [afterInfo.dependencyRids removeObject:subRid];
                     [self.activeRids removeObject:subRid];
                     [subInfo.operation cancel];
                 }
@@ -248,13 +240,13 @@
 }
 
 - (void)_sendAllRequest {
-    [self.activeRids removeAllObjects];
+    NSMutableArray *mArr = [NSMutableArray array];
     for (CSSMultiRequestInfo *info in self.requestInfo.allValues) {
         if (!info.isIndependent) {
-            [self.activeRids addObject:@(info.requestId)];
+            [mArr addObject:@(info.requestId)];
         }
     }
-    [self _sendRequestWithIds:self.activeRids.copy];
+    [self _sendRequestWithIds:mArr.copy];
 }
 
 - (CSSOperation *)_addCompleteOperationWithActiveRequests:(NSArray<CSSOperation *> *)operations {
@@ -269,6 +261,18 @@
         self.currentOperation.executing = NO;
     };
     return complete;
+}
+
+- (void)_executeCompleteHandle {
+    if (self.requestComplete) {
+        if ([NSThread currentThread].isMainThread) {
+            self.requestComplete(self.activeRids.copy);
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.requestComplete(self.activeRids.copy);
+            });
+        }
+    }
 }
 
 - (void)_buildRequestWithModel:(CSSMultiRequestInfo *)model {
@@ -289,17 +293,6 @@
     request.requestData = model.requestData;
 }
 
-- (void)_executeCompleteHandle {
-    if (self.requestComplete) {
-        if ([NSThread currentThread].isMainThread) {
-            self.requestComplete(self.activeRids.copy);
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.requestComplete(self.activeRids.copy);
-            });
-        }
-    }
-}
 
 - (void)_processResp:(CSSWebResponse *)resp requestId:(NSInteger)rid{
     if ([self.delegate respondsToSelector:@selector(viewModel:complete:requestId:)]) {
