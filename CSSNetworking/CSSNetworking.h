@@ -15,6 +15,6 @@
 #import "CSSNetworkingManager.h"
 #import "CSSWebRequest.h"
 #import "CSSWebResponse.h"
-#import "CSSMultiRequestViewModel.h"
+#import "CSSViewModel.h"
 
 #endif /* CSSNetworking_h */

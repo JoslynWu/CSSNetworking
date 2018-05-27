@@ -19,9 +19,9 @@ typedef NS_ENUM(NSInteger, requestId) {
 
 static NSInteger requestCount = 0;
 
-@interface CSSViewModelSingleRequetTests : XCTestCase <CSSMultiRequestViewModelDelegate>
+@interface CSSViewModelSingleRequetTests : XCTestCase <CSSViewModelDelegate>
 
-@property (nonatomic, strong) CSSMultiRequestViewModel *vm;
+@property (nonatomic, strong) CSSViewModel *vm;
 
 @end
 
@@ -31,13 +31,13 @@ static NSInteger requestCount = 0;
     [super setUp];
     
     __weak typeof(self) weakSelf = self;
-    self.vm = [[CSSMultiRequestViewModel alloc] initWithDelegate:self addRequest:^(vmCls *make) {
-        [make addRequestWithId:requestIdOne config:^(CSSRequestInfo * _Nonnull requestInfo) {
+    self.vm = [[CSSViewModel alloc] initWithDelegate:self addRequest:^(CSSViewModel *make) {
+        [make addRequestWithId:requestIdOne config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
             requestInfo.request = [CSSNormalRequest new];
             requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
         }];
         
-        [make addRequestWithId:requestIdTwo config:^(CSSRequestInfo * _Nonnull requestInfo) {
+        [make addRequestWithId:requestIdTwo config:^(CSSVMRequestInfo * _Nonnull requestInfo) {
             requestInfo.independent = YES;
             requestInfo.request = [CSSCacheRequest new];
             requestInfo.requestData = [weakSelf requestDataForRequestWithCode:@"tool"];
@@ -57,7 +57,7 @@ static NSInteger requestCount = 0;
 }
 
 - (void)testSingleRequestWithNoCache {
-    CSSRequestInfo *info = (CSSRequestInfo *)[self.vm requestInfoWithId:requestIdOne];
+    CSSVMRequestInfo *info = (CSSVMRequestInfo *)[self.vm requestInfoWithId:requestIdOne];
     ((CSSNormalRequestData *)info.requestData).contentCode = @"tool";
     [self.vm sendSingleRequestWithId:requestIdOne];
     
@@ -104,11 +104,11 @@ static NSInteger requestCount = 0;
     XCTAssertTrue([materModel.url isEqualToString:@"https://www.baidu.com"]);
 }
 
-#pragma mark  -  CSSMultiRequestViewModelDelegate
-- (void)viewModel:(vmCls *)vm complete:(CSSWebResponse *)resp requestId:(NSInteger)rid {
+#pragma mark  -  CSSViewModelDelegate
+- (void)viewModel:(CSSViewModel *)vm complete:(CSSWebResponse *)resp requestId:(NSInteger)rid {
     if (rid == requestIdOne || rid == requestIdTwo) {
         [self requestTestForOneWithResp:resp requestId:rid];
-        CSSRequestInfo *info = [vm requestInfoWithId:rid];
+        CSSVMRequestInfo *info = [vm requestInfoWithId:rid];
         if (!info.independent) {
             XCTAssertTrue(rid == 1);
         }
@@ -118,18 +118,18 @@ static NSInteger requestCount = 0;
     }
 }
 
-- (void)viewModel:(vmCls *)vm success:(CSSWebResponse *)resp requestId:(NSInteger)rid {
+- (void)viewModel:(CSSViewModel *)vm success:(CSSWebResponse *)resp requestId:(NSInteger)rid {
     if (rid == requestIdOne || rid == requestIdTwo) {
         XCTAssertFalse(resp.respType == CACHE);
         [self requestTestForOneWithResp:resp requestId:rid];
     }
 }
 
-- (void)viewModel:(vmCls *)vm failure:(CSSWebResponse *)resp requestId:(NSInteger)rid {
+- (void)viewModel:(CSSViewModel *)vm failure:(CSSWebResponse *)resp requestId:(NSInteger)rid {
     XCTAssert(NO, @"网络异常，请检查");
 }
 
-- (void)viewModel:(vmCls *)vm cache:(CSSWebResponse *)resp requestId:(NSInteger)rid {
+- (void)viewModel:(CSSViewModel *)vm cache:(CSSWebResponse *)resp requestId:(NSInteger)rid {
     if (rid == requestIdTwo) {
         XCTAssertTrue(resp.respType == CACHE);
         [self requestTestForOneWithResp:resp requestId:rid];

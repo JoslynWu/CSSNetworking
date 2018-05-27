@@ -46,7 +46,7 @@
  严格的成功界定（业务的成功)
  使用场景：
  - 本地缓存的条件之一。
- - `CSSMultiRequestViewModel`的成功界定。
+ - `CSSViewModel`的成功界定。
 
  @param manager manager
  @param resp resp

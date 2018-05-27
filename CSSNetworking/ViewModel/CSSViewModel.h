@@ -1,5 +1,5 @@
 //
-//  CSSMultiRequestViewModel.h
+//  CSSViewModel.h
 //  CSSNetworking
 //
 //  Created by Joslyn Wu on 2018/2/5.
@@ -12,9 +12,9 @@
 #import "CSSWebResponse.h"
 #import <CSSOperation/CSSOperation.h>
 
-#pragma mark - ********************* CSSMultiRequestInfo *********************
+#pragma mark - ********************* CSSViewModelItemInfo *********************
 NS_ASSUME_NONNULL_BEGIN
-@interface CSSMultiRequestInfo : NSObject
+@interface CSSViewModelItemInfo : NSObject
 
 /** 请求标记. 不能等于NSIntegerMax */
 @property (nonatomic, assign) NSInteger requestId;
@@ -43,12 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
 NS_ASSUME_NONNULL_END
 
 
-#pragma mark - ********************* CSSMultiRequestViewModelDelegate *********************
+#pragma mark - ********************* CSSViewModelDelegate *********************
 NS_ASSUME_NONNULL_BEGIN
-@class CSSMultiRequestViewModel;
-typedef CSSMultiRequestViewModel vmCls;
+@class CSSViewModel;
 
-@protocol CSSMultiRequestViewModelDelegate <NSObject>
+@protocol CSSViewModelDelegate <NSObject>
 
 @optional
 
@@ -56,38 +55,38 @@ typedef CSSMultiRequestViewModel vmCls;
  请求返回后调用
  - 在 `success`和`failed`之前调用
  */
-- (void)viewModel:(vmCls *)vm complete:(CSSWebResponse *)resp requestId:(NSInteger)rid;
+- (void)viewModel:(CSSViewModel *)vm complete:(CSSWebResponse *)resp requestId:(NSInteger)rid;
 
 /**
  成功时回调
  - 成功条件为严格条件。
  - 严格条件可以通过 `manager:strictSuccessForResponse:` 定制
  */
-- (void)viewModel:(vmCls *)vm success:(CSSWebResponse *)resp requestId:(NSInteger)rid;
+- (void)viewModel:(CSSViewModel *)vm success:(CSSWebResponse *)resp requestId:(NSInteger)rid;
 
 /**
  失败时调用
  - 严格的失败。 即为严格成功的else
  */
-- (void)viewModel:(vmCls *)vm failure:(CSSWebResponse *)resp requestId:(NSInteger)rid;
+- (void)viewModel:(CSSViewModel *)vm failure:(CSSWebResponse *)resp requestId:(NSInteger)rid;
 
 /**
  加载缓存时回调。
  - request.needCache = NO; 时不调用。
  */
-- (void)viewModel:(vmCls *)vm cache:(CSSWebResponse *)resp requestId:(NSInteger)rid;
+- (void)viewModel:(CSSViewModel *)vm cache:(CSSWebResponse *)resp requestId:(NSInteger)rid;
 
 @end
 NS_ASSUME_NONNULL_END
 
 
-#pragma mark - ********************* CSSMultiRequestViewModel *********************
+#pragma mark - ********************* CSSViewModel *********************
 NS_ASSUME_NONNULL_BEGIN
-typedef CSSMultiRequestInfo CSSRequestInfo;
-typedef void(^CSSVMConfigBlcok)(CSSRequestInfo *requestInfo);
+typedef CSSViewModelItemInfo CSSVMRequestInfo;
+typedef void(^CSSVMConfigBlcok)(CSSVMRequestInfo *requestInfo);
 typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
 
-@interface CSSMultiRequestViewModel : NSObject
+@interface CSSViewModel : NSObject
 
 #pragma mark - init
 /**
@@ -97,10 +96,10 @@ typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
  @param block 可以在其中添加请求，和发送请求
  @return instance
  */
-- (instancetype)initWithDelegate:(nullable id<CSSMultiRequestViewModelDelegate>)delegate
-                      addRequest:(nullable void(^)(vmCls *make))block NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithDelegate:(nullable id<CSSViewModelDelegate>)delegate
+                      addRequest:(nullable void(^)(CSSViewModel *make))block NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, weak) id<CSSMultiRequestViewModelDelegate> delegate;
+@property (nonatomic, weak) id<CSSViewModelDelegate> delegate;
 
 
 #pragma mark - config request
@@ -154,14 +153,14 @@ typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
 - (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid;
 
 
-#pragma mark - CSSRequestInfo
+#pragma mark - CSSVMRequestInfo
 /** 获取指定请求信息 */
-- (CSSRequestInfo *)requestInfoWithId:(NSInteger)rid;
+- (CSSVMRequestInfo *)requestInfoWithId:(NSInteger)rid;
 
 /** 移除指定请求 */
 - (void)removeRequestWithId:(NSInteger)rid;
 
-@property (nonatomic, strong, readonly) NSArray<CSSRequestInfo *> *allRequestInfo;
+@property (nonatomic, strong, readonly) NSArray<CSSVMRequestInfo *> *allRequestInfo;
 @property (nonatomic, assign, readonly) NSInteger count;
 
 

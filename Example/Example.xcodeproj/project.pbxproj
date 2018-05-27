@@ -20,7 +20,7 @@
 		9E96F224208D7BD700F8443D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9E96F223208D7BD700F8443D /* Assets.xcassets */; };
 		9E96F227208D7BD700F8443D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9E96F225208D7BD700F8443D /* LaunchScreen.storyboard */; };
 		9E96F22A208D7BD700F8443D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F229208D7BD700F8443D /* main.m */; };
-		9E96F256208D7CB900F8443D /* CSSMultiRequestViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F241208D7CB800F8443D /* CSSMultiRequestViewModel.m */; };
+		9E96F256208D7CB900F8443D /* CSSViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F241208D7CB800F8443D /* CSSViewModel.m */; };
 		9E96F257208D7CB900F8443D /* CSSWebURLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F245208D7CB800F8443D /* CSSWebURLCache.m */; };
 		9E96F258208D7CB900F8443D /* CSSWebRequestService.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F247208D7CB800F8443D /* CSSWebRequestService.m */; };
 		9E96F259208D7CB900F8443D /* CSSWebRequestTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E96F24B208D7CB800F8443D /* CSSWebRequestTask.m */; };
@@ -74,8 +74,8 @@
 		9E96F229208D7BD700F8443D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9E96F22F208D7BD700F8443D /* ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E96F235208D7BD700F8443D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9E96F240208D7CB800F8443D /* CSSMultiRequestViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSMultiRequestViewModel.h; sourceTree = "<group>"; };
-		9E96F241208D7CB800F8443D /* CSSMultiRequestViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSMultiRequestViewModel.m; sourceTree = "<group>"; };
+		9E96F240208D7CB800F8443D /* CSSViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSViewModel.h; sourceTree = "<group>"; };
+		9E96F241208D7CB800F8443D /* CSSViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSViewModel.m; sourceTree = "<group>"; };
 		9E96F242208D7CB800F8443D /* CSSNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSNetworking.h; sourceTree = "<group>"; };
 		9E96F244208D7CB800F8443D /* CSSWebRequestTaskCollector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSSWebRequestTaskCollector.h; sourceTree = "<group>"; };
 		9E96F245208D7CB800F8443D /* CSSWebURLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSSWebURLCache.m; sourceTree = "<group>"; };
@@ -225,8 +225,8 @@
 		9E96F23F208D7CB800F8443D /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				9E96F240208D7CB800F8443D /* CSSMultiRequestViewModel.h */,
-				9E96F241208D7CB800F8443D /* CSSMultiRequestViewModel.m */,
+				9E96F240208D7CB800F8443D /* CSSViewModel.h */,
+				9E96F241208D7CB800F8443D /* CSSViewModel.m */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -477,7 +477,7 @@
 				9E96F21F208D7BD500F8443D /* ViewController.m in Sources */,
 				9E96F22A208D7BD700F8443D /* main.m in Sources */,
 				9E96F259208D7CB900F8443D /* CSSWebRequestTask.m in Sources */,
-				9E96F256208D7CB900F8443D /* CSSMultiRequestViewModel.m in Sources */,
+				9E96F256208D7CB900F8443D /* CSSViewModel.m in Sources */,
 				9E96F25A208D7CB900F8443D /* CSSWebRequestFormItem.m in Sources */,
 				9E96F21C208D7BD500F8443D /* AppDelegate.m in Sources */,
 				9E96F257208D7CB900F8443D /* CSSWebURLCache.m in Sources */,
