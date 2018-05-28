@@ -99,9 +99,9 @@
     NSAssert1([self.itemInfos.allKeys containsObject:@(rid)],
               @"[CSSViewModel] contains one invalid rid %li", rid);
     
-    CSSVMRequestItem *fromInfo = [self requestInfoWithId:fromRid];
-    [fromInfo.dependencyRids addObject:@(rid)];
-    fromInfo.successConditionBlock = condition;
+    CSSVMRequestItem *fromItem = [self requestInfoWithId:fromRid];
+    [fromItem.dependencyRids addObject:@(rid)];
+    fromItem.successConditionBlock = condition;
 }
 
 - (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid
@@ -110,9 +110,9 @@
     NSAssert1([self.itemInfos.allKeys containsObject:@(rid)],
               @"[CSSViewModel] contains one invalid rid %li", rid);
     
-    CSSVMRequestItem *fromInfo = [self requestInfoWithId:fromRid];
-    [fromInfo.dependencyRids addObject:@(rid)];
-    fromInfo.failureConditionBlock  = condition;
+    CSSVMRequestItem *fromItem = [self requestInfoWithId:fromRid];
+    [fromItem.dependencyRids addObject:@(rid)];
+    fromItem.failureConditionBlock  = condition;
 }
 
 #pragma mark - send request
@@ -190,7 +190,7 @@
             continue;
         }
         [self.activeRids addObject:rid];
-        CSSOperation *operation = [self _createOperationWithRequestInfo:self.itemInfos[rid]];
+        CSSOperation *operation = [self _createOperationWithRequestItem:self.itemInfos[rid]];
         [mArr addObject:operation];
     }
     [self _addDependencyWithActiveRids:self.activeRids];
@@ -210,15 +210,15 @@
 }
 
 #pragma mark - operation
-- (CSSOperation *)_createOperationWithRequestInfo:(CSSVMRequestItem *)item {
+- (CSSOperation *)_createOperationWithRequestItem:(CSSVMRequestItem *)item {
     CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeConcurrent
                                                         queue:self.operationQueues];
     item.operation = operation;
     operation.name = [NSString stringWithFormat:@"%ld", item.requestId];
-    __weak CSSVMRequestItem *weakRequestInfo = item;
+    __weak CSSVMRequestItem *weakRequestItem = item;
     operation.blockOnMainThread = ^(__kindof CSSOperation *maker) {
-        [weakRequestInfo.request cancelFetch];
-        [weakRequestInfo.request sendRequest];
+        [weakRequestItem.request cancelFetch];
+        [weakRequestItem.request sendRequest];
     };
 
     return operation;
@@ -272,9 +272,9 @@
     }
     for (NSNumber *r in item.dependencyRids) {
         if ([rids containsObject:r]) {
-            CSSVMRequestItem *subInfo = [self requestInfoWithId:r.integerValue];
+            CSSVMRequestItem *subItem = [self requestInfoWithId:r.integerValue];
             [self.activeRids removeObject:r];
-            [subInfo.operation cancel];
+            [subItem.operation cancel];
             [self cancelWithRid:r.integerValue activeRids:rids];
         }
     }
