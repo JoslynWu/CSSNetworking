@@ -76,13 +76,13 @@ static NSInteger operationCompleteCount = 0;
 }
 
 - (void)testSuccessDependency {
-    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdOne dependency:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
         CSSNormalResponseData *respData = resp.processData;
         CSSDataModel *dataModel = respData.json;
         return [dataModel.contentCode isEqualToString:@"tool"];
     }];
     
-    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdTwo dependency:requestIdThree success:^BOOL(CSSWebResponse * resp) {
         return YES;
     }];
     
@@ -105,11 +105,11 @@ static NSInteger operationCompleteCount = 0;
 }
 
 - (void)testFailureDependency {
-    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdOne dependency:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
         return NO;
     }];
     
-    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdTwo dependency:requestIdThree success:^BOOL(CSSWebResponse * resp) {
         return YES;
     }];
     
@@ -133,11 +133,11 @@ static NSInteger operationCompleteCount = 0;
 }
 
 - (void)testMoreFailureDependency {
-    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdOne dependency:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
         return NO;
     }];
     
-    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdTwo dependency:requestIdThree success:^BOOL(CSSWebResponse * resp) {
         return NO;
     }];
     
@@ -159,11 +159,11 @@ static NSInteger operationCompleteCount = 0;
 
 - (void)testMoreFailureMixingDependency {
     self.vm.itemInfos[@(requestIdFour)].independent = NO;
-    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdOne dependency:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
         return NO;
     }];
     
-    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdTwo dependency:requestIdThree success:^BOOL(CSSWebResponse * resp) {
         return NO;
     }];
     
@@ -188,15 +188,15 @@ static NSInteger operationCompleteCount = 0;
 
 - (void)testMoreFailureDeepHierarchyDependency {
     self.vm.itemInfos[@(requestIdFour)].independent = NO;
-    [self.vm addDependencyForRid:requestIdOne from:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdOne dependency:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
         return NO;
     }];
     
-    [self.vm addDependencyForRid:requestIdTwo from:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdTwo dependency:requestIdThree success:^BOOL(CSSWebResponse * resp) {
         return NO;
     }];
     
-    [self.vm addDependencyForRid:requestIdThree from:requestIdFour success:^BOOL(CSSWebResponse * resp) {
+    [self.vm addRid:requestIdThree dependency:requestIdFour success:^BOOL(CSSWebResponse * resp) {
         return NO;
     }];
     
@@ -216,6 +216,43 @@ static NSInteger operationCompleteCount = 0;
     
     XCTAssertTrue(self.currentRids.count == self.backIds.count);
     XCTAssertTrue(requestCount == 1);
+    XCTAssertTrue(operationCompleteCount == 1);
+}
+
+
+#pragma mark - ********************* remove dependency *********************
+- (void)testRemoveDependency {
+    self.vm.itemInfos[@(requestIdFour)].independent = NO;
+    [self.vm addRid:requestIdOne dependency:requestIdTwo success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm addRid:requestIdTwo dependency:requestIdThree success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm addRid:requestIdThree dependency:requestIdFour success:^BOOL(CSSWebResponse * resp) {
+        return NO;
+    }];
+    
+    [self.vm removeRid:requestIdTwo dependency:requestIdThree];
+    
+    [self.vm sendAllRequest];
+    
+    CSS_WAIT
+    
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdOne)]);
+    XCTAssertTrue(![self.currentRids containsObject:@(requestIdThree)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.currentRids containsObject:@(requestIdFour)]);
+    
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdOne)]);
+    XCTAssertTrue(![self.backIds containsObject:@(requestIdThree)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdTwo)]);
+    XCTAssertTrue([self.backIds containsObject:@(requestIdFour)]);
+    
+    XCTAssertTrue(self.currentRids.count == self.backIds.count);
+    XCTAssertTrue(requestCount == 2);
     XCTAssertTrue(operationCompleteCount == 1);
 }
 

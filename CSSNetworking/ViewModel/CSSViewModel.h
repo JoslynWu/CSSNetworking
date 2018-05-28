@@ -28,9 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 /** 响应对象 */
 @property (nonatomic, strong) CSSWebResponseData *respData;
 
-/** 请求操作. 每次发送请求时，实例会被重新赋值 */
-@property (nonatomic, strong) CSSOperation *operation;
-
 /**
  是否为例外。
  - 例外是相对于`sendAllRequest`而言。
@@ -38,6 +35,12 @@ NS_ASSUME_NONNULL_BEGIN
  - NO 反之。可以在之后单独发送请求（通过`sendSingleRequestWithId:`或者`sendRequestWithIds:`）。
  */
 @property (nonatomic, assign, getter=isIndependent) BOOL independent;
+
+/** 请求操作. 每次发送请求时，实例会被重新赋值 */
+@property (nonatomic, strong, readonly) CSSOperation *operation;
+
+/** 被该列表的 rid 所依赖 */
+@property (nonatomic, strong, readonly) NSMutableSet<NSNumber *> *dependencyRids;
 
 @end
 NS_ASSUME_NONNULL_END
@@ -105,7 +108,7 @@ typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
 
 @property (nonatomic, weak) id<CSSViewModelDelegate> delegate;
 
-#pragma mark - config request
+#pragma mark - add request
 /**
  添加请求
 
@@ -114,16 +117,17 @@ typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
  */
 - (void)addRequestWithId:(NSInteger)rid config:(CSSVMConfigBlcok)configBlock;
 
+#pragma mark - add dependency
 /**
  添加成功回调时的条件依赖
  - condition为YES时按照常规方式执行
  - condition为NO时后面的依赖的操作被取消
 
  @param rid 依赖id
- @param fromRid 被依赖的id
+ @param oRid 被依赖的id
  @param condition 条件
  */
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid success:(nullable CSSVMConditionBlock)condition;
+- (void)addRid:(NSInteger)rid dependency:(NSInteger)oRid success:(nullable CSSVMConditionBlock)condition;
 
 /**
  添加失败回调时的条件依赖
@@ -131,10 +135,18 @@ typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
  - condition为NO时后面的依赖的操作被取消
  
  @param rid 依赖id
- @param fromRid 被依赖的id
+ @param oRid 被依赖的id
  @param condition 条件
  */
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid failure:(nullable CSSVMConditionBlock)condition;
+- (void)addRid:(NSInteger)rid dependency:(NSInteger)oRid failure:(nullable CSSVMConditionBlock)condition;
+
+/**
+ 移除依赖
+
+ @param rid 依赖的id
+ @param oRid 被依赖的id
+ */
+- (void)removeRid:(NSInteger)rid dependency:(NSInteger)oRid;
 
 
 #pragma mark - send request
@@ -152,13 +164,13 @@ typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
  @return 操作组。可以指定其优先级等
  */
 - (CSSOperation *)sendRequestWithIds:(NSInteger)rid, ...;
-- (CSSOperation *)sendRequestWithIdArray:(NSArray<NSNumber *> *)rids;
+- (CSSOperation *)sendRequestWithArray:(NSArray<NSNumber *> *)rids;
 - (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid;
 
 
 #pragma mark - CSSVMRequestItem
 /** 获取指定请求信息 */
-- (CSSVMRequestItem *)requestInfoWithId:(NSInteger)rid;
+- (CSSVMRequestItem *)requestItemWithId:(NSInteger)rid;
 
 /** 移除指定请求 */
 - (void)removeRequestWithId:(NSInteger)rid;

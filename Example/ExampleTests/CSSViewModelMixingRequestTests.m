@@ -91,7 +91,7 @@ static NSInteger operationCompleteCount = 0;
     CSSOperation *operation1 =  [self.vm sendAllRequest];
     CSSOperation *operation2 = [self.vm sendSingleRequestWithId:requestIdThree];
     CSSOperation *operation3 = [self.vm sendAllRequest];
-    CSSOperation *operation4 = [self.vm sendRequestWithIdArray:@[@(requestIdThree), @(requestIdTwo)]];
+    CSSOperation *operation4 = [self.vm sendRequestWithArray:@[@(requestIdThree), @(requestIdTwo)]];
     CSSOperation *operation5 = [self.vm sendRequestWithIds:requestIdOne, requestIdTwo, nil];
 //    operation2.queuePriority = NSOperationQueuePriorityVeryHigh;
     XCTAssertNotEqual(operation1, operation2);

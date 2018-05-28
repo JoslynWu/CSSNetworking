@@ -57,7 +57,7 @@ static NSInteger requestCount = 0;
 }
 
 - (void)testSingleRequestWithNoCache {
-    CSSVMRequestItem *info = (CSSVMRequestItem *)[self.vm requestInfoWithId:requestIdOne];
+    CSSVMRequestItem *info = (CSSVMRequestItem *)[self.vm requestItemWithId:requestIdOne];
     ((CSSNormalRequestData *)info.requestData).contentCode = @"tool";
     [self.vm sendSingleRequestWithId:requestIdOne];
     
@@ -108,7 +108,7 @@ static NSInteger requestCount = 0;
 - (void)viewModel:(CSSViewModel *)vm complete:(CSSWebResponse *)resp requestId:(NSInteger)rid {
     if (rid == requestIdOne || rid == requestIdTwo) {
         [self requestTestForOneWithResp:resp requestId:rid];
-        CSSVMRequestItem *info = [vm requestInfoWithId:rid];
+        CSSVMRequestItem *info = [vm requestItemWithId:rid];
         if (!info.independent) {
             XCTAssertTrue(rid == 1);
         }

@@ -12,10 +12,10 @@
 
 #pragma mark - ********************* CSSVMRequestItem *********************
 @interface CSSVMRequestItem ()
+@property (nonatomic, strong, readwrite) CSSOperation *operation;
 @property (nonatomic, copy, nullable) CSSVMConditionBlock successConditionBlock;
 @property (nonatomic, copy, nullable) CSSVMConditionBlock failureConditionBlock;
-// 被这些rid依赖
-@property (nonatomic, strong) NSMutableSet<NSNumber *> *dependencyRids;
+@property (nonatomic, strong, readwrite) NSMutableSet<NSNumber *> *dependencyRids;
 @end
 
 @implementation CSSVMRequestItem
@@ -93,26 +93,42 @@
 }
 
 #pragma mark - dependency
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid
-                    success:(nullable CSSVMConditionBlock)condition {
+- (void)addRid:(NSInteger)rid dependency:(NSInteger)oRid success:(nullable CSSVMConditionBlock)condition {
     
     NSAssert1([self.itemInfos.allKeys containsObject:@(rid)],
               @"[CSSViewModel] contains one invalid rid %li", rid);
+    NSAssert1([self.itemInfos.allKeys containsObject:@(oRid)],
+              @"[CSSViewModel] contains one invalid rid %li", oRid);
     
-    CSSVMRequestItem *fromItem = [self requestInfoWithId:fromRid];
+    CSSVMRequestItem *fromItem = [self requestItemWithId:oRid];
     [fromItem.dependencyRids addObject:@(rid)];
     fromItem.successConditionBlock = condition;
 }
 
-- (void)addDependencyForRid:(NSInteger)rid from:(NSInteger)fromRid
-                    failure:(nullable CSSVMConditionBlock)condition {
+- (void)addRid:(NSInteger)rid dependency:(NSInteger)oRid failure:(nullable CSSVMConditionBlock)condition {
     
     NSAssert1([self.itemInfos.allKeys containsObject:@(rid)],
               @"[CSSViewModel] contains one invalid rid %li", rid);
+    NSAssert1([self.itemInfos.allKeys containsObject:@(oRid)],
+              @"[CSSViewModel] contains one invalid rid %li", oRid);
     
-    CSSVMRequestItem *fromItem = [self requestInfoWithId:fromRid];
+    CSSVMRequestItem *fromItem = [self requestItemWithId:oRid];
     [fromItem.dependencyRids addObject:@(rid)];
-    fromItem.failureConditionBlock  = condition;
+    fromItem.failureConditionBlock = condition;
+}
+
+- (void)removeRid:(NSInteger)rid dependency:(NSInteger)oRid {
+    
+    NSAssert1([self.itemInfos.allKeys containsObject:@(rid)],
+              @"[CSSViewModel] contains one invalid rid %li", rid);
+    NSAssert1([self.itemInfos.allKeys containsObject:@(oRid)],
+              @"[CSSViewModel] contains one invalid rid %li", oRid);
+    
+    CSSVMRequestItem *fromItem = [self requestItemWithId:oRid];
+    [fromItem.dependencyRids removeObject:@(rid)];
+    if (fromItem.dependencyRids.count <= 0) {
+        fromItem.failureConditionBlock = nil;
+    }
 }
 
 #pragma mark - send request
@@ -150,7 +166,7 @@
     return operation;
 }
 
-- (CSSOperation *)sendRequestWithIdArray:(NSArray<NSNumber *> *)rids {
+- (CSSOperation *)sendRequestWithArray:(NSArray<NSNumber *> *)rids {
     CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeSerial
                                                         queue:self.operationQueues];
     __weak typeof(self) weakSelf = self;
@@ -167,7 +183,7 @@
     return [self sendRequestWithIds:rid, nil];
 }
 
-- (CSSVMRequestItem *)requestInfoWithId:(NSInteger)rid {
+- (CSSVMRequestItem *)requestItemWithId:(NSInteger)rid {
     return [self.itemInfos objectForKey:@(rid)];
 }
 
@@ -211,6 +227,7 @@
 
 #pragma mark - operation
 - (CSSOperation *)_createOperationWithRequestItem:(CSSVMRequestItem *)item {
+    
     CSSOperation *operation = [CSSOperation operationWithType:kCSSOperationTypeConcurrent
                                                         queue:self.operationQueues];
     item.operation = operation;
@@ -241,10 +258,10 @@
 #pragma mark - dependency
 - (void)_addDependencyWithActiveRids:(NSArray<NSNumber *> *)rids {
     for (NSNumber *rid in rids) {
-        CSSVMRequestItem *item = [self requestInfoWithId:rid.integerValue];
+        CSSVMRequestItem *item = [self requestItemWithId:rid.integerValue];
         for (NSNumber *dependencyRid in item.dependencyRids) {
             if ([rids containsObject:dependencyRid]) {
-                CSSOperation *afterOp = [self requestInfoWithId:dependencyRid.integerValue].operation;
+                CSSOperation *afterOp = [self requestItemWithId:dependencyRid.integerValue].operation;
                 [afterOp addDependency:item.operation];
             }
         }
@@ -256,7 +273,7 @@
                             resp:(CSSWebResponse *)resp
                        isSuccess:(BOOL)success {
     
-    CSSVMRequestItem *item = [self requestInfoWithId:rid];
+    CSSVMRequestItem *item = [self requestItemWithId:rid];
     
     CSSVMConditionBlock block = success ? item.successConditionBlock : item.failureConditionBlock;
     BOOL condition = block ? block(resp) : YES;
@@ -266,13 +283,13 @@
 }
 
 - (void)cancelWithRid:(NSInteger)rid activeRids:(NSArray<NSNumber *> *)rids {
-    CSSVMRequestItem *item = [self requestInfoWithId:rid];
+    CSSVMRequestItem *item = [self requestItemWithId:rid];
     if (item.dependencyRids <= 0) {
         return;
     }
     for (NSNumber *r in item.dependencyRids) {
         if ([rids containsObject:r]) {
-            CSSVMRequestItem *subItem = [self requestInfoWithId:r.integerValue];
+            CSSVMRequestItem *subItem = [self requestItemWithId:r.integerValue];
             [self.activeRids removeObject:r];
             [subItem.operation cancel];
             [self cancelWithRid:r.integerValue activeRids:rids];
