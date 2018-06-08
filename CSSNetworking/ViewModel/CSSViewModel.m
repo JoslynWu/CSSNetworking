@@ -144,7 +144,7 @@
     return operation;
 }
 
-- (CSSOperation *)sendRequestWithIds:(NSInteger)rid, ... {
+- (CSSOperation *)sendRequestWithIds:(NSInteger)rid, ... NS_REQUIRES_NIL_TERMINATION{
     NSMutableArray *mArr = [[NSMutableArray alloc] init];
     [mArr addObject:@(rid)];
     va_list argList;

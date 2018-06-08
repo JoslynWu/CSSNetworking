@@ -163,7 +163,7 @@ typedef BOOL(^CSSVMConditionBlock)(CSSWebResponse *);
  @param rid id序列，以 nil 结束
  @return 操作组。可以指定其优先级等
  */
-- (CSSOperation *)sendRequestWithIds:(NSInteger)rid, ...;
+- (CSSOperation *)sendRequestWithIds:(NSInteger)rid, ... NS_REQUIRES_NIL_TERMINATION;
 - (CSSOperation *)sendRequestWithArray:(NSArray<NSNumber *> *)rids;
 - (CSSOperation *)sendSingleRequestWithId:(NSInteger)rid;
 
